@@ -1,0 +1,500 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01F26B9D7A55318BDD875215 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23AC3175685924B02D34E1A /* TTSService.swift */; };
+		0BDD82683A2CD95264D0599E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583836BF935D0E4F62FCF78 /* SettingsView.swift */; };
+		11CE9196918DE6A31CE4658B /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */; };
+		14B93F7E6AD44CA5F4087467 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */; };
+		21DA772961D189F355BAEE39 /* AudioEngineConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A45B477F011643FF82680E /* AudioEngineConfig.swift */; };
+		3B06BAEDE47A07A5D610375E /* STTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240F8621EE39817014DA849 /* STTService.swift */; };
+		413C95DDBA7459A3C023B2CC /* VoiceIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */; };
+		42E443F2762EC14AD98B5A8A /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12319D237BE41E70BB5A632 /* ChatMessage.swift */; };
+		46E3F014C5E6E007EC463A95 /* VADService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4658AB3AAC6D82AA9C2B09D3 /* VADService.swift */; };
+		4CA2FB854772AB20856BB370 /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D96ECECADB065441BFD53 /* Stubs.swift */; };
+		5AEEF65FA725327D2A73B642 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */; };
+		61B2918547BEA479A3268D83 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4424524E2DAE5781B070D850 /* ChatInputBar.swift */; };
+		8A4DAC95084181D001F1F5C9 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */; };
+		8BD10C0E79C3D30AFD5F50B9 /* AppleTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */; };
+		ADE632F59EB5BB2EA5DFDE1A /* AppleSpeechSTTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */; };
+		B28DBE60E927090880B91533 /* SileroVADService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075F431D0F73579A272730A4 /* SileroVADService.swift */; };
+		BD8B964FFE790B449730A3F0 /* CyranoChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */; };
+		C6EBFDFAE51BB8929A971B6E /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CCE965A18AC3DB2462C9E /* LLMService.swift */; };
+		DD007E71A160CF18AAD9EF20 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */; };
+		E925230BC6644EEE7A1649EB /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */; };
+		F7B8FF538CF88B9E3E5F63F2 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF9A8E82CB5C81B5BFAD82E /* Logging */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		075F431D0F73579A272730A4 /* SileroVADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SileroVADService.swift; sourceTree = "<group>"; };
+		0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoChatApp.swift; sourceTree = "<group>"; };
+		1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
+		3C4CCE965A18AC3DB2462C9E /* LLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMService.swift; sourceTree = "<group>"; };
+		4424524E2DAE5781B070D850 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
+		442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechSTTService.swift; sourceTree = "<group>"; };
+		4658AB3AAC6D82AA9C2B09D3 /* VADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VADService.swift; sourceTree = "<group>"; };
+		61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
+		6E44AD0721AA32422DA68875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceIndicatorView.swift; sourceTree = "<group>"; };
+		89A45B477F011643FF82680E /* AudioEngineConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineConfig.swift; sourceTree = "<group>"; };
+		92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		B12319D237BE41E70BB5A632 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleTTSService.swift; sourceTree = "<group>"; };
+		C23AC3175685924B02D34E1A /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
+		C50D96ECECADB065441BFD53 /* Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
+		DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		E240F8621EE39817014DA849 /* STTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STTService.swift; sourceTree = "<group>"; };
+		F0F18438DD93121E859A5641 /* CyranoChat.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CyranoChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F583836BF935D0E4F62FCF78 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9F0A6547F5646FD742C66812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7B8FF538CF88B9E3E5F63F2 /* Logging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1EE131B792F4C07E28CF8C3D /* TTS */ = {
+			isa = PBXGroup;
+			children = (
+				B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */,
+			);
+			path = TTS;
+			sourceTree = "<group>";
+		};
+		1F39B25338F2DFA3E8D18D3A /* STT */ = {
+			isa = PBXGroup;
+			children = (
+				442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */,
+			);
+			path = STT;
+			sourceTree = "<group>";
+		};
+		29D69CBDD4044A17DC90467A /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3C4CCE965A18AC3DB2462C9E /* LLMService.swift */,
+				E240F8621EE39817014DA849 /* STTService.swift */,
+				C23AC3175685924B02D34E1A /* TTSService.swift */,
+				4658AB3AAC6D82AA9C2B09D3 /* VADService.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		390ED7E238B01DE6A73F6261 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C50D96ECECADB065441BFD53 /* Stubs.swift */,
+				BEDDD2E5710FBAD849D013B3 /* Audio */,
+				D9DD8ECB29675BF325FD96AE /* LLM */,
+				1F39B25338F2DFA3E8D18D3A /* STT */,
+				1EE131B792F4C07E28CF8C3D /* TTS */,
+				4014AE161799F5C2065194EF /* VAD */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3BE611FB19A0DF4A787BE047 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4014AE161799F5C2065194EF /* VAD */ = {
+			isa = PBXGroup;
+			children = (
+				075F431D0F73579A272730A4 /* SileroVADService.swift */,
+			);
+			path = VAD;
+			sourceTree = "<group>";
+		};
+		783AA68D94E718733E9AE8E0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B12319D237BE41E70BB5A632 /* ChatMessage.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7F64C7AC4940BF2D205D595A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F0F18438DD93121E859A5641 /* CyranoChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93FC4DD582ECB7E5C042379E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6E44AD0721AA32422DA68875 /* Info.plist */,
+				3BE611FB19A0DF4A787BE047 /* App */,
+				783AA68D94E718733E9AE8E0 /* Models */,
+				29D69CBDD4044A17DC90467A /* Protocols */,
+				390ED7E238B01DE6A73F6261 /* Services */,
+				D75AE44D237B33A5070B4335 /* Utilities */,
+				DBC216867656E177C28A3A2B /* ViewModels */,
+				A8843FD3F181D0C0822C1242 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A8843FD3F181D0C0822C1242 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4424524E2DAE5781B070D850 /* ChatInputBar.swift */,
+				1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */,
+				309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */,
+				F583836BF935D0E4F62FCF78 /* SettingsView.swift */,
+				85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BEDDD2E5710FBAD849D013B3 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */,
+				89A45B477F011643FF82680E /* AudioEngineConfig.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		D75AE44D237B33A5070B4335 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		D9DD8ECB29675BF325FD96AE /* LLM */ = {
+			isa = PBXGroup;
+			children = (
+				61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */,
+			);
+			path = LLM;
+			sourceTree = "<group>";
+		};
+		DBC216867656E177C28A3A2B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		DEEE7533B01FEE9C09A4A0A4 = {
+			isa = PBXGroup;
+			children = (
+				93FC4DD582ECB7E5C042379E /* Sources */,
+				7F64C7AC4940BF2D205D595A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3D497B2E9EFBC06135A8AEA /* CyranoChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63238F4A06DEC9BBD55F9150 /* Build configuration list for PBXNativeTarget "CyranoChat" */;
+			buildPhases = (
+				B80404A7BFADF195FE243B53 /* Sources */,
+				9F0A6547F5646FD742C66812 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CyranoChat;
+			packageProductDependencies = (
+				5EF9A8E82CB5C81B5BFAD82E /* Logging */,
+			);
+			productName = CyranoChat;
+			productReference = F0F18438DD93121E859A5641 /* CyranoChat.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D4445D07D0AB343047D2AC7C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = C50B79D0F7EC2DDC17DE9ADC /* Build configuration list for PBXProject "CyranoChat" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DEEE7533B01FEE9C09A4A0A4;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				33F51C935EB4DD8D9666A008 /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3D497B2E9EFBC06135A8AEA /* CyranoChat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B80404A7BFADF195FE243B53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADE632F59EB5BB2EA5DFDE1A /* AppleSpeechSTTService.swift in Sources */,
+				8BD10C0E79C3D30AFD5F50B9 /* AppleTTSService.swift in Sources */,
+				8A4DAC95084181D001F1F5C9 /* AudioEngine.swift in Sources */,
+				21DA772961D189F355BAEE39 /* AudioEngineConfig.swift in Sources */,
+				61B2918547BEA479A3268D83 /* ChatInputBar.swift in Sources */,
+				42E443F2762EC14AD98B5A8A /* ChatMessage.swift in Sources */,
+				5AEEF65FA725327D2A73B642 /* ChatView.swift in Sources */,
+				14B93F7E6AD44CA5F4087467 /* ChatViewModel.swift in Sources */,
+				DD007E71A160CF18AAD9EF20 /* ClaudeAPIService.swift in Sources */,
+				BD8B964FFE790B449730A3F0 /* CyranoChatApp.swift in Sources */,
+				11CE9196918DE6A31CE4658B /* KeychainHelper.swift in Sources */,
+				C6EBFDFAE51BB8929A971B6E /* LLMService.swift in Sources */,
+				E925230BC6644EEE7A1649EB /* MessageBubbleView.swift in Sources */,
+				3B06BAEDE47A07A5D610375E /* STTService.swift in Sources */,
+				0BDD82683A2CD95264D0599E /* SettingsView.swift in Sources */,
+				B28DBE60E927090880B91533 /* SileroVADService.swift in Sources */,
+				4CA2FB854772AB20856BB370 /* Stubs.swift in Sources */,
+				01F26B9D7A55318BDD875215 /* TTSService.swift in Sources */,
+				46E3F014C5E6E007EC463A95 /* VADService.swift in Sources */,
+				413C95DDBA7459A3C023B2CC /* VoiceIndicatorView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2DC8BD41FA7428734F8470AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		79A3921A89044D935B743EE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.chat;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		89DCE45A891B7CA3B7DE9C3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BE03E52426653FAF22294133 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.chat;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		63238F4A06DEC9BBD55F9150 /* Build configuration list for PBXNativeTarget "CyranoChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79A3921A89044D935B743EE9 /* Debug */,
+				BE03E52426653FAF22294133 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C50B79D0F7EC2DDC17DE9ADC /* Build configuration list for PBXProject "CyranoChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DC8BD41FA7428734F8470AC /* Debug */,
+				89DCE45A891B7CA3B7DE9C3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		33F51C935EB4DD8D9666A008 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5EF9A8E82CB5C81B5BFAD82E /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33F51C935EB4DD8D9666A008 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D4445D07D0AB343047D2AC7C /* Project object */;
+}
