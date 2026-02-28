@@ -38,6 +38,7 @@ targets:
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
     info:
+      path: Generated/Info.plist
       properties:
         UILaunchScreen: {}
         UIRequiresFullScreen: true
@@ -50,6 +51,9 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         NSMicrophoneUsageDescription: CyranoChat needs microphone access for voice conversations.
         NSSpeechRecognitionUsageDescription: CyranoChat uses speech recognition to convert your voice to text.
+        NSLocalNetworkUsageDescription: CyranoChat connects to a nearby Cyrano Server for AI processing.
+        NSBonjourServices:
+          - _cyrano-chat._tcp
     preBuildScripts:
       - name: Check Models
         script: |

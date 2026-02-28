@@ -34,10 +34,15 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                apiKeySection
+                connectionModeSection
+                if !viewModel.serverMode {
+                    apiKeySection
+                }
                 sttSection
                 ttsSection
-                llmSection
+                if !viewModel.serverMode {
+                    llmSection
+                }
                 systemPromptSection
                 aboutSection
             }
@@ -54,6 +59,50 @@ struct SettingsView: View {
                     apiKeyInput = String(repeating: "*", count: 20)
                 }
                 refreshModelStates()
+            }
+        }
+    }
+
+    // MARK: - Connection Mode Section
+
+    private var connectionModeSection: some View {
+        Section {
+            Toggle("Server Mode", isOn: $viewModel.serverMode)
+
+            if viewModel.serverMode {
+                HStack {
+                    Text("Status")
+                    Spacer()
+                    ConnectionStatusView(
+                        state: viewModel.multipeerSessionManager.connectionState,
+                        serverName: viewModel.multipeerSessionManager.connectedServerName
+                    )
+                }
+
+                if viewModel.multipeerSessionManager.connectionState == .disconnected
+                    || viewModel.multipeerSessionManager.connectionState.isError {
+                    Button {
+                        viewModel.multipeerSessionManager.startBrowsing()
+                    } label: {
+                        Label("Search for Server", systemImage: "antenna.radiowaves.left.and.right")
+                    }
+                }
+
+                if viewModel.multipeerSessionManager.connectionState == .connected {
+                    Button(role: .destructive) {
+                        viewModel.multipeerSessionManager.disconnect()
+                    } label: {
+                        Label("Disconnect", systemImage: "wifi.slash")
+                    }
+                }
+            }
+        } header: {
+            Label("Connection", systemImage: "antenna.radiowaves.left.and.right")
+        } footer: {
+            if viewModel.serverMode {
+                Text("Connect to a Cyrano Server on your local network. The server handles AI processing.")
+            } else {
+                Text("Direct mode uses your API key to call Claude from the phone.")
             }
         }
     }

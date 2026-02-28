@@ -2,7 +2,7 @@
 // Advertises as a nearby service, accepts iOS client connections,
 // and provides send/receive primitives
 
-import MultipeerConnectivity
+@preconcurrency import MultipeerConnectivity
 import Logging
 
 /// Connection event for logging
@@ -30,7 +30,7 @@ final class CyranoMCService: NSObject, ObservableObject {
     // MARK: - MC Properties
 
     private let myPeerID: MCPeerID
-    private let session: MCSession
+    nonisolated(unsafe) private let session: MCSession
     private let advertiser: MCNearbyServiceAdvertiser
     private let logger = Logger(label: "com.cyrano.server.mc")
 
@@ -151,10 +151,11 @@ extension CyranoMCService: MCNearbyServiceAdvertiserDelegate {
                                 didReceiveInvitationFromPeer peerID: MCPeerID,
                                 withContext context: Data?,
                                 invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+        // Accept immediately on the calling thread (invitationHandler is not Sendable)
+        invitationHandler(true, session)
         Task { @MainActor in
-            self.logger.info("Accepting invitation from \(peerID.displayName)")
+            self.logger.info("Accepted invitation from \(peerID.displayName)")
             self.addEvent("Invitation from \(peerID.displayName) — accepted")
-            invitationHandler(true, self.session)
         }
     }
 

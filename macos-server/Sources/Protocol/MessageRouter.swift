@@ -2,7 +2,7 @@
 // Routes incoming MC messages to Claude API and streams responses back
 
 import Foundation
-import MultipeerConnectivity
+@preconcurrency import MultipeerConnectivity
 import Logging
 
 @MainActor
@@ -73,32 +73,35 @@ final class MessageRouter: ObservableObject {
 
         logger.info("Chat request \(requestId) from \(peer.displayName): \(payload.messages.count) messages")
 
+        // Use a counter actor for thread-safe sequence numbering
+        let counter = SequenceCounter()
+
         let task = Task { [weak self] in
             guard let self else { return }
-            var sequenceNumber = 0
 
             do {
                 try await claudeService.streamCompletion(
                     messages: payload.messages,
                     config: payload.config
-                ) { content, isDone, stopReason in
-                    guard !Task.isCancelled else { return }
+                ) { [weak self] content, isDone, stopReason in
+                    guard let self, !Task.isCancelled else { return }
 
                     if !content.isEmpty {
-                        sequenceNumber += 1
+                        let seq = await counter.next()
                         let tokenPayload = StreamTokenPayload(
                             requestId: requestId,
                             content: content,
-                            sequenceNumber: sequenceNumber
+                            sequenceNumber: seq
                         )
                         await self.sendMessage(type: .streamToken, payload: tokenPayload, to: peer)
                     }
 
                     if isDone {
+                        let seq = await counter.current
                         let completePayload = StreamCompletePayload(
                             requestId: requestId,
                             stopReason: stopReason,
-                            totalTokens: sequenceNumber
+                            totalTokens: seq
                         )
                         await self.sendMessage(type: .streamComplete, payload: completePayload, to: peer)
                     }
@@ -185,5 +188,16 @@ final class MessageRouter: ObservableObject {
             retryAfter: retryAfter
         )
         sendMessage(type: .streamError, payload: errorPayload, to: peer)
+    }
+}
+
+// MARK: - Thread-safe sequence counter
+
+private actor SequenceCounter {
+    private(set) var current: Int = 0
+
+    func next() -> Int {
+        current += 1
+        return current
     }
 }

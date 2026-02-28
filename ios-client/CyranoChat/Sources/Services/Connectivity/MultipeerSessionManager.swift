@@ -1,7 +1,7 @@
 // CyranoChat - MultipeerConnectivity Session Manager
 // Browses for the macOS server, manages session, and routes incoming data
 
-import MultipeerConnectivity
+@preconcurrency import MultipeerConnectivity
 import Combine
 import Logging
 
@@ -32,20 +32,23 @@ final class MultipeerSessionManager: NSObject, ObservableObject {
     static let serviceType = "cyrano-chat"
 
     private let myPeerID: MCPeerID
-    private var session: MCSession!
-    private var browser: MCNearbyServiceBrowser!
+    nonisolated(unsafe) private var session: MCSession!
+    nonisolated(unsafe) private var browser: MCNearbyServiceBrowser!
     private let logger = Logger(label: "com.cyrano.multipeer")
 
     // MARK: - Response Routing
 
     /// Active response streams keyed by requestId
-    private var responseContinuations: [String: AsyncStream<StreamTokenPayload>.Continuation] = []
+    private var responseContinuations: [String: AsyncStream<StreamTokenPayload>.Continuation] = [:]
 
     /// Error handlers keyed by requestId
     private var errorHandlers: [String: (StreamErrorPayload) -> Void] = [:]
 
     /// Completion handlers keyed by requestId
     private var completionHandlers: [String: (StreamCompletePayload) -> Void] = [:]
+
+    /// Last error messages keyed by requestId
+    private var lastErrors: [String: String] = [:]
 
     /// Server status callback
     var onStatusUpdate: ((StatusUpdatePayload) -> Void)?
@@ -110,15 +113,8 @@ final class MultipeerSessionManager: NSObject, ObservableObject {
 
     // MARK: - Response Stream Registration
 
-    /// Register a stream for receiving tokens for a given requestId
-    func registerResponseStream(requestId: String) -> (
-        tokens: AsyncStream<StreamTokenPayload>,
-        onError: @escaping (StreamErrorPayload) -> Void,
-        onComplete: @escaping (StreamCompletePayload) -> Void
-    ) {
-        var errorHandler: ((StreamErrorPayload) -> Void)?
-        var completeHandler: ((StreamCompletePayload) -> Void)?
-
+    /// Register a token stream for a given requestId (returns only the AsyncStream)
+    func registerTokenStream(requestId: String) -> AsyncStream<StreamTokenPayload> {
         let stream = AsyncStream<StreamTokenPayload> { continuation in
             self.responseContinuations[requestId] = continuation
 
@@ -131,24 +127,29 @@ final class MultipeerSessionManager: NSObject, ObservableObject {
             }
         }
 
-        errorHandler = { [weak self] error in
+        errorHandlers[requestId] = { [weak self] error in
+            self?.lastErrors[requestId] = error.errorMessage
             self?.responseContinuations[requestId]?.finish()
             self?.responseContinuations[requestId] = nil
             self?.errorHandlers[requestId] = nil
             self?.completionHandlers[requestId] = nil
         }
 
-        completeHandler = { [weak self] complete in
+        completionHandlers[requestId] = { [weak self] _ in
             self?.responseContinuations[requestId]?.finish()
             self?.responseContinuations[requestId] = nil
             self?.errorHandlers[requestId] = nil
             self?.completionHandlers[requestId] = nil
         }
 
-        errorHandlers[requestId] = errorHandler!
-        completionHandlers[requestId] = completeHandler!
+        return stream
+    }
 
-        return (stream, errorHandler!, completeHandler!)
+    /// Get the last error message for a request, if any
+    func lastError(for requestId: String) -> String? {
+        let error = lastErrors[requestId]
+        lastErrors[requestId] = nil
+        return error
     }
 
     func unregisterResponseStream(requestId: String) {
@@ -165,6 +166,7 @@ final class MultipeerSessionManager: NSObject, ObservableObject {
         responseContinuations.removeAll()
         errorHandlers.removeAll()
         completionHandlers.removeAll()
+        lastErrors.removeAll()
     }
 
     // MARK: - Incoming Message Routing
@@ -212,20 +214,21 @@ extension MultipeerSessionManager: MCSessionDelegate {
 
     nonisolated func session(_ session: MCSession, peer peerID: MCPeerID,
                              didChange state: MCSessionState) {
+        let peerName = peerID.displayName
         Task { @MainActor in
             switch state {
             case .connected:
                 self.connectionState = .connected
-                self.connectedServerName = peerID.displayName
+                self.connectedServerName = peerName
                 self.browser.stopBrowsingForPeers()
-                self.logger.info("Connected to server: \(peerID.displayName)")
+                self.logger.info("Connected to server: \(peerName)")
 
             case .notConnected:
                 let wasConnected = self.connectionState == .connected
                 self.connectionState = .disconnected
                 self.connectedServerName = nil
                 self.cancelAllStreams()
-                self.logger.info("Disconnected from server: \(peerID.displayName)")
+                self.logger.info("Disconnected from server: \(peerName)")
 
                 // Auto-reconnect if we were previously connected
                 if wasConnected {
@@ -237,7 +240,7 @@ extension MultipeerSessionManager: MCSessionDelegate {
 
             case .connecting:
                 self.connectionState = .connecting
-                self.logger.info("Connecting to server: \(peerID.displayName)")
+                self.logger.info("Connecting to server: \(peerName)")
 
             @unknown default:
                 break
@@ -272,18 +275,21 @@ extension MultipeerSessionManager: MCNearbyServiceBrowserDelegate {
     nonisolated func browser(_ browser: MCNearbyServiceBrowser,
                              foundPeer peerID: MCPeerID,
                              withDiscoveryInfo info: [String: String]?) {
+        let peerName = peerID.displayName
+        // invitePeer must happen on the same thread as the delegate callback
+        // to avoid sending non-Sendable MCPeerID across isolation boundaries
+        browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
         Task { @MainActor in
-            // Auto-invite the first server found (demo simplicity)
-            self.logger.info("Found server: \(peerID.displayName)")
+            self.logger.info("Found server: \(peerName)")
             self.connectionState = .connecting
-            browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
         }
     }
 
     nonisolated func browser(_ browser: MCNearbyServiceBrowser,
                              lostPeer peerID: MCPeerID) {
+        let peerName = peerID.displayName
         Task { @MainActor in
-            self.logger.info("Lost server: \(peerID.displayName)")
+            self.logger.info("Lost server: \(peerName)")
         }
     }
 

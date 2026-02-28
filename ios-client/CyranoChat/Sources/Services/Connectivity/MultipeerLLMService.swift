@@ -22,7 +22,7 @@ public actor MultipeerLLMService: LLMService {
     public var costPerOutputToken: Decimal { 0 }
     public var contextWindowSize: Int { 200_000 }
 
-    public init(sessionManager: MultipeerSessionManager) {
+    init(sessionManager: MultipeerSessionManager) {
         self.sessionManager = sessionManager
     }
 
@@ -48,7 +48,7 @@ public actor MultipeerLLMService: LLMService {
         )
 
         // Register response stream before sending to avoid race
-        let registration = await sessionManager.registerResponseStream(requestId: requestId)
+        let tokenStream = await sessionManager.registerTokenStream(requestId: requestId)
 
         // Build and send chat request
         let requestPayload = ChatRequestPayload(
@@ -65,30 +65,11 @@ public actor MultipeerLLMService: LLMService {
             throw LLMError.connectionFailed("Failed to send request: \(error.localizedDescription)")
         }
 
-        // Track errors for the stream
-        let errorRef = ErrorRef()
-
-        // Set up error handler
-        let onError = registration.onError
-        let onComplete = registration.onComplete
-
-        // Wrap error/complete into the stream lifecycle
-        // Errors from the server will terminate the token stream
-        Task { @MainActor in
-            // Replace the handlers to capture error info
-            let originalErrorHandler = onError
-            sessionManager.errorHandlers[requestId] = { payload in
-                Task {
-                    await errorRef.set(LLMError.streamFailed(payload.errorMessage))
-                }
-                originalErrorHandler(payload)
-            }
-        }
-
         // Transform token stream into LLMToken stream
+        let mgr = sessionManager
         return AsyncStream<LLMToken> { continuation in
-            Task {
-                for await tokenPayload in registration.tokens {
+            Task { [tokenStream] in
+                for await tokenPayload in tokenStream {
                     let token = LLMToken(
                         content: tokenPayload.content,
                         isDone: false
@@ -96,15 +77,13 @@ public actor MultipeerLLMService: LLMService {
                     continuation.yield(token)
                 }
 
-                // Stream ended — check if it was an error or normal completion
-                if let error = await errorRef.get() {
-                    // Yield an error token so the UI shows it
+                // Stream ended — check if there was an error
+                if let errorMsg = await mgr.lastError(for: requestId) {
                     continuation.yield(LLMToken(
-                        content: "[Error: \(error.localizedDescription)]",
+                        content: "[Error: \(errorMsg)]",
                         isDone: true
                     ))
                 } else {
-                    // Normal completion
                     continuation.yield(LLMToken(content: "", isDone: true, stopReason: .endTurn))
                 }
 
@@ -115,18 +94,5 @@ public actor MultipeerLLMService: LLMService {
 
     public func estimateTokenCount(_ text: String) -> Int {
         max(1, text.count * 10 / 35)
-    }
-}
-
-// Thread-safe error holder
-private actor ErrorRef {
-    private var error: LLMError?
-
-    func set(_ error: LLMError) {
-        self.error = error
-    }
-
-    func get() -> LLMError? {
-        error
     }
 }

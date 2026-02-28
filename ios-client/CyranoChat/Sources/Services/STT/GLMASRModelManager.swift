@@ -198,13 +198,18 @@ public actor GLMASRModelManager {
     // MARK: - Initialization
 
     public init() {
-        Task {
-            await checkModelAvailability()
-            // Proactively copy models from bundle if not yet in Documents
-            if !isModelAvailable() && !areCoreMLModelsAvailable() {
-                try? await downloadModels()
-                await checkModelAvailability()
-            }
+        Task { [weak self] in
+            guard let self else { return }
+            await self.installFromBundleIfNeeded()
+        }
+    }
+
+    /// Proactively copy models from bundle if not yet in Documents
+    private func installFromBundleIfNeeded() async {
+        checkModelAvailability()
+        if !isModelAvailable() && !areCoreMLModelsAvailable() {
+            try? await downloadModels()
+            checkModelAvailability()
         }
     }
 

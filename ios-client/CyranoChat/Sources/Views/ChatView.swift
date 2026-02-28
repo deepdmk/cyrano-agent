@@ -41,12 +41,21 @@ struct ChatView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            viewModel.clearConversation()
-                        } label: {
-                            Image(systemName: "plus.message")
+                        HStack(spacing: 8) {
+                            Button {
+                                viewModel.clearConversation()
+                            } label: {
+                                Image(systemName: "plus.message")
+                            }
+                            .disabled(viewModel.messages.isEmpty)
+
+                            if viewModel.serverMode {
+                                ConnectionStatusView(
+                                    state: viewModel.multipeerSessionManager.connectionState,
+                                    serverName: viewModel.multipeerSessionManager.connectedServerName
+                                )
+                            }
                         }
-                        .disabled(viewModel.messages.isEmpty)
                     }
 
                     ToolbarItem(placement: .topBarTrailing) {
@@ -61,7 +70,7 @@ struct ChatView: View {
                     SettingsView(viewModel: viewModel)
                 }
                 .onAppear {
-                    if !viewModel.hasAPIKey {
+                    if !viewModel.serverMode && !viewModel.hasAPIKey {
                         showSettings = true
                     }
                 }

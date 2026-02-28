@@ -72,9 +72,21 @@ public final class ChatViewModel: ObservableObject {
         didSet { UserDefaults.standard.set(voiceOutputEnabled, forKey: "voiceOutputEnabled") }
     }
 
+    /// Server mode: route LLM requests through macOS server via MultipeerConnectivity
+    @Published public var serverMode: Bool {
+        didSet {
+            UserDefaults.standard.set(serverMode, forKey: "serverMode")
+            reconfigureLLM()
+        }
+    }
+
+    // MARK: - MultipeerConnectivity
+
+    let multipeerSessionManager = MultipeerSessionManager()
+
     // MARK: - Services
 
-    private var llmService: ClaudeAPIService?
+    private var llmService: (any LLMService)?
     private var sttService: (any STTService)?
     private var ttsService: (any TTSService)?
     private var vadService: SileroVADService?
@@ -88,9 +100,9 @@ public final class ChatViewModel: ObservableObject {
     private var voiceTask: Task<Void, Never>?
     private var silenceTimer: Task<Void, Never>?
 
-    /// Whether an API key is configured
+    /// Whether an API key is configured (or server mode is active)
     public var hasAPIKey: Bool {
-        KeychainHelper.anthropicAPIKey != nil
+        serverMode || KeychainHelper.anthropicAPIKey != nil
     }
 
     /// Available STT providers for this app
@@ -145,18 +157,17 @@ public final class ChatViewModel: ObservableObject {
             ? UserDefaults.standard.bool(forKey: "voiceOutputEnabled")
             : true
 
+        self.serverMode = UserDefaults.standard.bool(forKey: "serverMode")
+
         configureServices()
     }
 
     // MARK: - Service Configuration
 
     public func configureServices() {
-        guard let apiKey = KeychainHelper.anthropicAPIKey else {
-            logger.warning("No API key configured")
-            return
-        }
+        // Configure LLM (server mode or direct API)
+        reconfigureLLM()
 
-        llmService = ClaudeAPIService(apiKey: apiKey)
         vadService = SileroVADService()
 
         // Configure STT based on selection
@@ -173,7 +184,25 @@ public final class ChatViewModel: ObservableObject {
             )
         }
 
-        logger.info("Services configured: STT=\(selectedSTTProvider.identifier), TTS=\(selectedTTSProvider.identifier)")
+        logger.info("Services configured: STT=\(selectedSTTProvider.identifier), TTS=\(selectedTTSProvider.identifier), serverMode=\(serverMode)")
+    }
+
+    /// Reconfigure LLM service based on server mode toggle
+    private func reconfigureLLM() {
+        if serverMode {
+            llmService = MultipeerLLMService(sessionManager: multipeerSessionManager)
+            multipeerSessionManager.startBrowsing()
+            logger.info("LLM configured: MultipeerConnectivity (server mode)")
+        } else {
+            multipeerSessionManager.disconnect()
+            guard let apiKey = KeychainHelper.anthropicAPIKey else {
+                logger.warning("No API key configured")
+                llmService = nil
+                return
+            }
+            llmService = ClaudeAPIService(apiKey: apiKey)
+            logger.info("LLM configured: Claude API (direct mode)")
+        }
     }
 
     private func reconfigureSTT() {
@@ -210,7 +239,9 @@ public final class ChatViewModel: ObservableObject {
     /// Reconfigure after API key change
     public func reconfigureWithAPIKey(_ apiKey: String) {
         KeychainHelper.anthropicAPIKey = apiKey
-        llmService = ClaudeAPIService(apiKey: apiKey)
+        if !serverMode {
+            llmService = ClaudeAPIService(apiKey: apiKey)
+        }
         configureServices()
         logger.info("LLM service reconfigured with new API key")
     }
@@ -234,7 +265,9 @@ public final class ChatViewModel: ObservableObject {
         messages.append(userMessage)
 
         guard let llm = llmService else {
-            errorMessage = "Please set your API key in Settings."
+            errorMessage = serverMode
+                ? "Not connected to server. Check connection in Settings."
+                : "Please set your API key in Settings."
             return
         }
 
