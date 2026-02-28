@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 24px;
+}
+
+.bar {
+  width: 4px;
+  border-radius: 2px;
+  background-color: var(--color-blue);
+  transition: height 100ms ease;
+}

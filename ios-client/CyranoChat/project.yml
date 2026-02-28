@@ -22,20 +22,44 @@ targets:
     platform: iOS
     sources:
       - path: Sources
+        excludes:
+          - Info.plist
     resources:
       - path: Resources
+      - path: Models
+        optional: true
+        buildPhase: resources
     dependencies:
       - package: swift-log
         product: Logging
     settings:
       base:
-        INFOPLIST_FILE: Sources/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.cyrano.chat
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
-        GENERATE_INFOPLIST_FILE: false
     info:
-      path: Sources/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSMicrophoneUsageDescription: CyranoChat needs microphone access for voice conversations.
+        NSSpeechRecognitionUsageDescription: CyranoChat uses speech recognition to convert your voice to text.
+    preBuildScripts:
+      - name: Check Models
+        script: |
+          if [ ! -f "${SRCROOT}/Models/PocketTTS/model.safetensors" ]; then
+            echo "warning: Pocket TTS models not found. Run Scripts/download_models.sh or copy from unamentis."
+          fi
+          if [ ! -d "${SRCROOT}/Models/GLM-ASR/GLMASRWhisperEncoder.mlmodelc" ]; then
+            echo "warning: GLM-ASR models not found. Run Scripts/download_models.sh or copy from unamentis."
+          fi
+        basedOnDependencyAnalysis: false
   CyranoChatTests:
     type: bundle.unit-test
     platform: iOS

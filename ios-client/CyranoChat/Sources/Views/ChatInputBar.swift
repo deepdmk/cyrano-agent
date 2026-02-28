@@ -9,8 +9,6 @@ struct ChatInputBar: View {
     let onSend: () -> Void
     let onVoiceToggle: () -> Void
 
-    @FocusState private var isFocused: Bool
-
     var body: some View {
         VStack(spacing: 0) {
             Divider()
@@ -19,27 +17,35 @@ struct ChatInputBar: View {
                 // Microphone button
                 Button(action: onVoiceToggle) {
                     Image(systemName: voiceIcon)
-                        .font(.system(size: 20))
+                        .font(.system(size: 20, weight: .medium))
                         .foregroundStyle(voiceState != .idle ? .red : .blue)
                         .frame(width: 36, height: 36)
+                        .background(
+                            Circle()
+                                .fill(voiceState != .idle ? Color.red.opacity(0.12) : Color.clear)
+                        )
                         .contentShape(Circle())
                 }
                 .disabled(isGenerating && voiceState == .idle)
                 .accessibilityLabel(voiceState != .idle ? "Stop voice" : "Start voice")
+                .animation(.easeInOut(duration: 0.2), value: voiceState)
 
                 // Text input
                 TextField("Message", text: $text, axis: .vertical)
                     .textFieldStyle(.plain)
                     .lineLimit(1...6)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(.fill.tertiary)
+                            .fill(Color(.systemGray6))
                     )
-                    .focused($isFocused)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color(.systemGray4), lineWidth: 0.5)
+                    )
                     .onSubmit {
-                        if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        if canSend {
                             onSend()
                         }
                     }
@@ -49,11 +55,13 @@ struct ChatInputBar: View {
                 // Send button
                 Button(action: onSend) {
                     Image(systemName: "arrow.up.circle.fill")
-                        .font(.system(size: 30))
-                        .foregroundStyle(canSend ? .blue : .gray.opacity(0.4))
+                        .font(.system(size: 32))
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(canSend ? .blue : .gray.opacity(0.3))
                 }
                 .disabled(!canSend)
                 .accessibilityLabel("Send message")
+                .animation(.easeInOut(duration: 0.15), value: canSend)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)

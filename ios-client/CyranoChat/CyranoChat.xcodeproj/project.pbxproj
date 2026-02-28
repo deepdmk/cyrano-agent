@@ -13,6 +13,8 @@
 		11CE9196918DE6A31CE4658B /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */; };
 		14B93F7E6AD44CA5F4087467 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */; };
 		21DA772961D189F355BAEE39 /* AudioEngineConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A45B477F011643FF82680E /* AudioEngineConfig.swift */; };
+		2B77F0C1912528BA4B040BE9 /* KyutaiPocketModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E3E07360B87E51748E2FE /* KyutaiPocketModelManager.swift */; };
+		380F05C54226AA1A2E57925F /* PlaybackOrchestratorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51FD985B72B80DFF4900183 /* PlaybackOrchestratorConfig.swift */; };
 		3B06BAEDE47A07A5D610375E /* STTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240F8621EE39817014DA849 /* STTService.swift */; };
 		413C95DDBA7459A3C023B2CC /* VoiceIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */; };
 		42E443F2762EC14AD98B5A8A /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12319D237BE41E70BB5A632 /* ChatMessage.swift */; };
@@ -20,21 +22,30 @@
 		4CA2FB854772AB20856BB370 /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D96ECECADB065441BFD53 /* Stubs.swift */; };
 		5AEEF65FA725327D2A73B642 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */; };
 		61B2918547BEA479A3268D83 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4424524E2DAE5781B070D850 /* ChatInputBar.swift */; };
+		6D6675E3DC39F239D9050809 /* PlayableSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDA024DF8D57F55E92D6D3 /* PlayableSegment.swift */; };
+		79D60466887126B2A6D6D2EE /* KyutaiPocketTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44750A6656E3B8F31D6EEF /* KyutaiPocketTTSService.swift */; };
+		82B419DBE2305C2B85F79592 /* LLMLoadableService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57ACDEAC8EDEE8176735C040 /* LLMLoadableService.swift */; };
+		83F89F2143861D49A813D897 /* PocketTTSBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670859EC75F55B2D3ADF9EF3 /* PocketTTSBridge.swift */; };
 		86F118A464ED008078B9C7BC /* StubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95335727F5E7FDFF79EBC1F /* StubTests.swift */; };
 		8A4DAC95084181D001F1F5C9 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */; };
 		8BD10C0E79C3D30AFD5F50B9 /* AppleTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */; };
+		8D68C6023AE1951AF446E940 /* PlaybackOrchestratorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552C5F6895C79421C88C3B1B /* PlaybackOrchestratorDelegate.swift */; };
+		9A675A6A93B6853C0C25D5CF /* KyutaiPocketTTSConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0931A10015FF2A26E6838D71 /* KyutaiPocketTTSConfig.swift */; };
 		A4FAA9BCE172585910764AEC /* ChatMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF50F304D41A88C54A4DEEA /* ChatMessageTests.swift */; };
 		ADE632F59EB5BB2EA5DFDE1A /* AppleSpeechSTTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */; };
 		B28DBE60E927090880B91533 /* SileroVADService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075F431D0F73579A272730A4 /* SileroVADService.swift */; };
 		BD7D3A8F0DB30DA2DB31062D /* LLMProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2480FE543CCFBD1817BA2B49 /* LLMProtocolTests.swift */; };
 		BD8B964FFE790B449730A3F0 /* CyranoChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */; };
+		C375DF8A73C742E47C393EE8 /* AudioPlaybackOrchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B3CE5BE34AA2E56A932D1E /* AudioPlaybackOrchestrator.swift */; };
 		C6EBFDFAE51BB8929A971B6E /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CCE965A18AC3DB2462C9E /* LLMService.swift */; };
 		C7DC775DCADD3311BACCE77A /* VoiceServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43976C3D8E8084990C13AFBC /* VoiceServiceTests.swift */; };
 		CE38B66ACC92FD29B51D962A /* ChatViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D998AB7420FFE77739B181D8 /* ChatViewModelTests.swift */; };
 		DA7BEA2CB4E272400A0C8247 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5063B5A29059698B3FDEC1 /* KeychainHelperTests.swift */; };
 		DD007E71A160CF18AAD9EF20 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */; };
 		E925230BC6644EEE7A1649EB /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */; };
+		E92A65CBF42F66DF74AD9054 /* GLMASRModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4691667B4D44939201100C38 /* GLMASRModelManager.swift */; };
 		F7B8FF538CF88B9E3E5F63F2 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF9A8E82CB5C81B5BFAD82E /* Logging */; };
+		F82A3EC29A1D5F61D56606BE /* OnDeviceLLMModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB9626CA814CBACA978307 /* OnDeviceLLMModelManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,20 +60,29 @@
 
 /* Begin PBXFileReference section */
 		075F431D0F73579A272730A4 /* SileroVADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SileroVADService.swift; sourceTree = "<group>"; };
+		0931A10015FF2A26E6838D71 /* KyutaiPocketTTSConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KyutaiPocketTTSConfig.swift; sourceTree = "<group>"; };
 		0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		16EDA024DF8D57F55E92D6D3 /* PlayableSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableSegment.swift; sourceTree = "<group>"; };
 		197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoChatApp.swift; sourceTree = "<group>"; };
 		1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2480FE543CCFBD1817BA2B49 /* LLMProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProtocolTests.swift; sourceTree = "<group>"; };
 		309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
+		330E3E07360B87E51748E2FE /* KyutaiPocketModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KyutaiPocketModelManager.swift; sourceTree = "<group>"; };
 		3C4CCE965A18AC3DB2462C9E /* LLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMService.swift; sourceTree = "<group>"; };
 		3FF50F304D41A88C54A4DEEA /* ChatMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageTests.swift; sourceTree = "<group>"; };
+		3FFB9626CA814CBACA978307 /* OnDeviceLLMModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceLLMModelManager.swift; sourceTree = "<group>"; };
 		43976C3D8E8084990C13AFBC /* VoiceServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceServiceTests.swift; sourceTree = "<group>"; };
 		4424524E2DAE5781B070D850 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
 		442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechSTTService.swift; sourceTree = "<group>"; };
 		4658AB3AAC6D82AA9C2B09D3 /* VADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VADService.swift; sourceTree = "<group>"; };
+		4691667B4D44939201100C38 /* GLMASRModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLMASRModelManager.swift; sourceTree = "<group>"; };
 		4DBEF63CBA44BAA3A5361F00 /* ClaudeAPIServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIServiceTests.swift; sourceTree = "<group>"; };
+		552C5F6895C79421C88C3B1B /* PlaybackOrchestratorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackOrchestratorDelegate.swift; sourceTree = "<group>"; };
+		57ACDEAC8EDEE8176735C040 /* LLMLoadableService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMLoadableService.swift; sourceTree = "<group>"; };
 		61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
+		670859EC75F55B2D3ADF9EF3 /* PocketTTSBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketTTSBridge.swift; sourceTree = "<group>"; };
 		6E44AD0721AA32422DA68875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		78B3CE5BE34AA2E56A932D1E /* AudioPlaybackOrchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackOrchestrator.swift; sourceTree = "<group>"; };
 		85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceIndicatorView.swift; sourceTree = "<group>"; };
 		89A45B477F011643FF82680E /* AudioEngineConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineConfig.swift; sourceTree = "<group>"; };
 		8DBA555588BEA456471F8D38 /* CyranoChatTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CyranoChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,7 +92,9 @@
 		B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleTTSService.swift; sourceTree = "<group>"; };
 		C23AC3175685924B02D34E1A /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
 		C50D96ECECADB065441BFD53 /* Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
+		D51FD985B72B80DFF4900183 /* PlaybackOrchestratorConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackOrchestratorConfig.swift; sourceTree = "<group>"; };
 		D998AB7420FFE77739B181D8 /* ChatViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModelTests.swift; sourceTree = "<group>"; };
+		DF44750A6656E3B8F31D6EEF /* KyutaiPocketTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KyutaiPocketTTSService.swift; sourceTree = "<group>"; };
 		DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		E240F8621EE39817014DA849 /* STTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STTService.swift; sourceTree = "<group>"; };
 		E95335727F5E7FDFF79EBC1F /* StubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubTests.swift; sourceTree = "<group>"; };
@@ -96,6 +118,10 @@
 			isa = PBXGroup;
 			children = (
 				B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */,
+				330E3E07360B87E51748E2FE /* KyutaiPocketModelManager.swift */,
+				0931A10015FF2A26E6838D71 /* KyutaiPocketTTSConfig.swift */,
+				DF44750A6656E3B8F31D6EEF /* KyutaiPocketTTSService.swift */,
+				670859EC75F55B2D3ADF9EF3 /* PocketTTSBridge.swift */,
 			);
 			path = TTS;
 			sourceTree = "<group>";
@@ -104,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */,
+				4691667B4D44939201100C38 /* GLMASRModelManager.swift */,
 			);
 			path = STT;
 			sourceTree = "<group>";
@@ -111,6 +138,7 @@
 		29D69CBDD4044A17DC90467A /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				57ACDEAC8EDEE8176735C040 /* LLMLoadableService.swift */,
 				3C4CCE965A18AC3DB2462C9E /* LLMService.swift */,
 				E240F8621EE39817014DA849 /* STTService.swift */,
 				C23AC3175685924B02D34E1A /* TTSService.swift */,
@@ -211,6 +239,10 @@
 			children = (
 				92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */,
 				89A45B477F011643FF82680E /* AudioEngineConfig.swift */,
+				78B3CE5BE34AA2E56A932D1E /* AudioPlaybackOrchestrator.swift */,
+				16EDA024DF8D57F55E92D6D3 /* PlayableSegment.swift */,
+				D51FD985B72B80DFF4900183 /* PlaybackOrchestratorConfig.swift */,
+				552C5F6895C79421C88C3B1B /* PlaybackOrchestratorDelegate.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -227,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */,
+				3FFB9626CA814CBACA978307 /* OnDeviceLLMModelManager.swift */,
 			);
 			path = LLM;
 			sourceTree = "<group>";
@@ -273,6 +306,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63238F4A06DEC9BBD55F9150 /* Build configuration list for PBXNativeTarget "CyranoChat" */;
 			buildPhases = (
+				3B9B33D3364A2FD58BB3DC1D /* Check Models */,
 				B80404A7BFADF195FE243B53 /* Sources */,
 				9F0A6547F5646FD742C66812 /* Frameworks */,
 			);
@@ -320,6 +354,28 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3B9B33D3364A2FD58BB3DC1D /* Check Models */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check Models";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ ! -d \"${SRCROOT}/Models/VAD/silero_vad.mlmodelc\" ] && [ ! -f \"${SRCROOT}/Models/PocketTTS/model.safetensors\" ]; then\n  echo \"warning: On-device models not found. Run Scripts/download_models.sh to download.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6BF75C70FAEE300F326D1C40 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -343,15 +399,26 @@
 				8BD10C0E79C3D30AFD5F50B9 /* AppleTTSService.swift in Sources */,
 				8A4DAC95084181D001F1F5C9 /* AudioEngine.swift in Sources */,
 				21DA772961D189F355BAEE39 /* AudioEngineConfig.swift in Sources */,
+				C375DF8A73C742E47C393EE8 /* AudioPlaybackOrchestrator.swift in Sources */,
 				61B2918547BEA479A3268D83 /* ChatInputBar.swift in Sources */,
 				42E443F2762EC14AD98B5A8A /* ChatMessage.swift in Sources */,
 				5AEEF65FA725327D2A73B642 /* ChatView.swift in Sources */,
 				14B93F7E6AD44CA5F4087467 /* ChatViewModel.swift in Sources */,
 				DD007E71A160CF18AAD9EF20 /* ClaudeAPIService.swift in Sources */,
 				BD8B964FFE790B449730A3F0 /* CyranoChatApp.swift in Sources */,
+				E92A65CBF42F66DF74AD9054 /* GLMASRModelManager.swift in Sources */,
 				11CE9196918DE6A31CE4658B /* KeychainHelper.swift in Sources */,
+				2B77F0C1912528BA4B040BE9 /* KyutaiPocketModelManager.swift in Sources */,
+				9A675A6A93B6853C0C25D5CF /* KyutaiPocketTTSConfig.swift in Sources */,
+				79D60466887126B2A6D6D2EE /* KyutaiPocketTTSService.swift in Sources */,
+				82B419DBE2305C2B85F79592 /* LLMLoadableService.swift in Sources */,
 				C6EBFDFAE51BB8929A971B6E /* LLMService.swift in Sources */,
 				E925230BC6644EEE7A1649EB /* MessageBubbleView.swift in Sources */,
+				F82A3EC29A1D5F61D56606BE /* OnDeviceLLMModelManager.swift in Sources */,
+				6D6675E3DC39F239D9050809 /* PlayableSegment.swift in Sources */,
+				380F05C54226AA1A2E57925F /* PlaybackOrchestratorConfig.swift in Sources */,
+				8D68C6023AE1951AF446E940 /* PlaybackOrchestratorDelegate.swift in Sources */,
+				83F89F2143861D49A813D897 /* PocketTTSBridge.swift in Sources */,
 				3B06BAEDE47A07A5D610375E /* STTService.swift in Sources */,
 				0BDD82683A2CD95264D0599E /* SettingsView.swift in Sources */,
 				B28DBE60E927090880B91533 /* SileroVADService.swift in Sources */,

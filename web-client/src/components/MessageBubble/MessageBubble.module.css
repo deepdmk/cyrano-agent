@@ -1,0 +1,54 @@
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.userRow {
+  align-items: flex-end;
+}
+
+.assistantRow {
+  align-items: flex-start;
+}
+
+.bubble {
+  max-width: calc(100% - 48px);
+  border-radius: 18px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.userBubble {
+  background: var(--color-user-bubble);
+  color: var(--color-user-text);
+}
+
+.assistantBubble {
+  background: var(--color-assistant-bubble);
+  color: var(--color-assistant-text);
+}
+
+.text {
+  display: block;
+  padding: 10px 14px;
+  font-size: var(--font-body);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.timestamp {
+  font-size: var(--font-caption2);
+  color: var(--color-tertiary);
+  padding: 0 4px;
+  margin-top: 4px;
+}
+
+.timestampRight {
+  text-align: right;
+}
+
+.timestampLeft {
+  text-align: left;
+}

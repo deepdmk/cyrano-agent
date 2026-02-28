@@ -102,7 +102,7 @@ struct ClaudeAPIServiceTests {
     @Test("Stream fails with invalid API key")
     func invalidAPIKey() async {
         let service = ClaudeAPIService(apiKey: "invalid-key")
-        let config = LLMConfig(model: "claude-sonnet-4-20250514", maxTokens: 10)
+        let config = LLMConfig(model: "claude-sonnet-4-6-20250620", maxTokens: 10)
         let messages = [LLMMessage(role: .user, content: "test")]
 
         do {

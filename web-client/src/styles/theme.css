@@ -1,0 +1,88 @@
+:root {
+  /* Primary content */
+  --color-primary: #000000;
+  --color-secondary: rgba(60, 60, 67, 0.6);
+  --color-tertiary: rgba(60, 60, 67, 0.3);
+
+  /* Fills */
+  --color-fill-secondary: rgba(120, 120, 128, 0.16);
+  --color-fill-tertiary: rgba(118, 118, 128, 0.12);
+
+  /* System colors */
+  --color-blue: #007AFF;
+  --color-green: #34C759;
+  --color-orange: #FF9500;
+  --color-red: #FF3B30;
+  --color-gray: #8E8E93;
+
+  /* Backgrounds */
+  --color-background: #FFFFFF;
+  --color-bar: rgba(249, 249, 249, 0.94);
+  --color-grouped-background: #F2F2F7;
+
+  /* Input field fills (matching iOS systemGray6 / systemGray4) */
+  --color-input-fill: #F2F2F7;
+  --color-input-border: #D1D1D6;
+
+  /* Divider */
+  --color-separator: rgba(60, 60, 67, 0.29);
+
+  /* Message bubbles */
+  --color-user-bubble: var(--color-blue);
+  --color-user-text: #FFFFFF;
+  --color-assistant-bubble: var(--color-fill-secondary);
+  --color-assistant-text: var(--color-primary);
+
+  /* Voice states */
+  --color-listening-dot: var(--color-green);
+  --color-processing-dot: var(--color-orange);
+  --color-speaking-dot: var(--color-blue);
+  --color-idle-dot: var(--color-gray);
+
+  /* Send button disabled */
+  --color-send-disabled: rgba(142, 142, 147, 0.3);
+
+  /* Streaming dots */
+  --color-streaming-dot: rgba(60, 60, 67, 0.36);
+
+  /* Destructive */
+  --color-destructive: var(--color-red);
+
+  /* Mic active tint */
+  --color-mic-active-bg: rgba(255, 59, 48, 0.12);
+
+  /* Modal overlay */
+  --color-overlay: rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #FFFFFF;
+    --color-secondary: rgba(235, 235, 245, 0.6);
+    --color-tertiary: rgba(235, 235, 245, 0.3);
+
+    --color-fill-secondary: rgba(120, 120, 128, 0.32);
+    --color-fill-tertiary: rgba(118, 118, 128, 0.24);
+
+    --color-blue: #0A84FF;
+    --color-green: #30D158;
+    --color-orange: #FF9F0A;
+    --color-red: #FF453A;
+    --color-gray: #8E8E93;
+
+    --color-background: #000000;
+    --color-bar: rgba(30, 30, 30, 0.94);
+    --color-grouped-background: #1C1C1E;
+
+    --color-input-fill: #1C1C1E;
+    --color-input-border: #3A3A3C;
+
+    --color-separator: rgba(84, 84, 88, 0.65);
+
+    --color-streaming-dot: rgba(235, 235, 245, 0.36);
+
+    --color-mic-active-bg: rgba(255, 69, 58, 0.12);
+
+    --color-overlay: rgba(0, 0, 0, 0.6);
+  }
+}

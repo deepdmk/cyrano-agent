@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 16px;
+  min-height: 300px;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 60px;
+}
+
+.spacer:first-child {
+  min-height: 120px;
+  flex: 2;
+}
+
+.icon {
+  color: var(--color-tertiary);
+  margin-bottom: 16px;
+  stroke-width: 1;
+}
+
+.title {
+  font-size: var(--font-title2);
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: var(--font-subheadline);
+  color: var(--color-tertiary);
+}

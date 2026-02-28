@@ -1,5 +1,5 @@
 // CyranoChat - Chat View Model
-// Orchestrates text chat and voice pipeline, simplified SessionManager
+// Orchestrates text chat and voice pipeline using reference voice services
 
 import Foundation
 import Combine
@@ -37,11 +37,46 @@ public final class ChatViewModel: ObservableObject {
         didSet { UserDefaults.standard.set(systemPrompt, forKey: "systemPrompt") }
     }
 
+    /// Selected STT provider
+    @Published public var selectedSTTProvider: STTProvider {
+        didSet {
+            UserDefaults.standard.set(selectedSTTProvider.rawValue, forKey: "selectedSTTProvider")
+            reconfigureSTT()
+        }
+    }
+
+    /// Selected TTS provider
+    @Published public var selectedTTSProvider: TTSProvider {
+        didSet {
+            UserDefaults.standard.set(selectedTTSProvider.rawValue, forKey: "selectedTTSProvider")
+            reconfigureTTS()
+        }
+    }
+
+    /// Selected Pocket TTS voice
+    @Published public var selectedPocketVoice: KyutaiPocketVoice {
+        didSet {
+            UserDefaults.standard.set(selectedPocketVoice.rawValue, forKey: "selectedPocketVoice")
+        }
+    }
+
+    /// Selected Pocket TTS preset
+    @Published public var selectedPocketPreset: KyutaiPocketPreset {
+        didSet {
+            UserDefaults.standard.set(selectedPocketPreset.rawValue, forKey: "selectedPocketPreset")
+        }
+    }
+
+    /// Voice output enabled
+    @Published public var voiceOutputEnabled: Bool {
+        didSet { UserDefaults.standard.set(voiceOutputEnabled, forKey: "voiceOutputEnabled") }
+    }
+
     // MARK: - Services
 
     private var llmService: ClaudeAPIService?
-    private var sttService: AppleSpeechSTTService?
-    private var ttsService: AppleTTSService?
+    private var sttService: (any STTService)?
+    private var ttsService: (any TTSService)?
     private var vadService: SileroVADService?
     private var audioEngine: AudioEngine?
     private let telemetry = TelemetryEngine()
@@ -58,13 +93,57 @@ public final class ChatViewModel: ObservableObject {
         KeychainHelper.anthropicAPIKey != nil
     }
 
+    /// Available STT providers for this app
+    public static let availableSTTProviders: [STTProvider] = [
+        .appleSpeech,
+        .glmASROnDevice
+    ]
+
+    /// Available TTS providers for this app
+    public static let availableTTSProviders: [TTSProvider] = [
+        .pocketTTS,
+        .appleTTS
+    ]
+
     // MARK: - Initialization
 
     public init() {
         self.selectedModel = UserDefaults.standard.string(forKey: "selectedModel")
-            ?? "claude-sonnet-4-20250514"
+            ?? "claude-sonnet-4-6-20250620"
         self.systemPrompt = UserDefaults.standard.string(forKey: "systemPrompt")
             ?? "You are a helpful AI assistant. Keep responses concise and conversational."
+
+        // Load STT provider preference (default: Apple Speech)
+        if let sttRaw = UserDefaults.standard.string(forKey: "selectedSTTProvider"),
+           let stt = STTProvider(rawValue: sttRaw) {
+            self.selectedSTTProvider = stt
+        } else {
+            self.selectedSTTProvider = .appleSpeech
+        }
+
+        // Load TTS provider preference (default: Pocket TTS)
+        if let ttsRaw = UserDefaults.standard.string(forKey: "selectedTTSProvider"),
+           let tts = TTSProvider(rawValue: ttsRaw) {
+            self.selectedTTSProvider = tts
+        } else {
+            self.selectedTTSProvider = .pocketTTS
+        }
+
+        // Load Pocket TTS voice preference
+        let voiceRaw = UserDefaults.standard.integer(forKey: "selectedPocketVoice")
+        self.selectedPocketVoice = KyutaiPocketVoice(rawValue: voiceRaw) ?? .alba
+
+        // Load Pocket TTS preset preference
+        if let presetRaw = UserDefaults.standard.string(forKey: "selectedPocketPreset"),
+           let preset = KyutaiPocketPreset(rawValue: presetRaw) {
+            self.selectedPocketPreset = preset
+        } else {
+            self.selectedPocketPreset = .default
+        }
+
+        self.voiceOutputEnabled = UserDefaults.standard.object(forKey: "voiceOutputEnabled") != nil
+            ? UserDefaults.standard.bool(forKey: "voiceOutputEnabled")
+            : true
 
         configureServices()
     }
@@ -78,23 +157,61 @@ public final class ChatViewModel: ObservableObject {
         }
 
         llmService = ClaudeAPIService(apiKey: apiKey)
-        sttService = AppleSpeechSTTService()
-        ttsService = AppleTTSService()
         vadService = SileroVADService()
 
-        audioEngine = AudioEngine(
-            config: .default,
-            vadService: vadService!,
-            telemetry: telemetry
-        )
+        // Configure STT based on selection
+        reconfigureSTT()
 
-        logger.info("Services configured")
+        // Configure TTS based on selection
+        reconfigureTTS()
+
+        if let vad = vadService {
+            audioEngine = AudioEngine(
+                config: .default,
+                vadService: vad,
+                telemetry: telemetry
+            )
+        }
+
+        logger.info("Services configured: STT=\(selectedSTTProvider.identifier), TTS=\(selectedTTSProvider.identifier)")
+    }
+
+    private func reconfigureSTT() {
+        switch selectedSTTProvider {
+        case .appleSpeech:
+            sttService = AppleSpeechSTTService()
+        case .glmASROnDevice:
+            // GLM-ASR on-device decoder pending - fall back to Apple Speech
+            logger.warning("GLM-ASR on-device not yet available, using Apple Speech")
+            sttService = AppleSpeechSTTService()
+        default:
+            sttService = AppleSpeechSTTService()
+        }
+    }
+
+    private func reconfigureTTS() {
+        switch selectedTTSProvider {
+        case .pocketTTS:
+            let config = KyutaiPocketTTSConfig(
+                voiceIndex: selectedPocketVoice.rawValue,
+                temperature: selectedPocketPreset.config.temperature,
+                topP: selectedPocketPreset.config.topP,
+                speed: selectedPocketPreset.config.speed,
+                consistencySteps: selectedPocketPreset.config.consistencySteps
+            )
+            ttsService = KyutaiPocketTTSService(config: config)
+        case .appleTTS:
+            ttsService = AppleTTSService()
+        default:
+            ttsService = AppleTTSService()
+        }
     }
 
     /// Reconfigure after API key change
     public func reconfigureWithAPIKey(_ apiKey: String) {
         KeychainHelper.anthropicAPIKey = apiKey
         llmService = ClaudeAPIService(apiKey: apiKey)
+        configureServices()
         logger.info("LLM service reconfigured with new API key")
     }
 
@@ -243,7 +360,7 @@ public final class ChatViewModel: ObservableObject {
             }
 
             voiceState = .listening
-            logger.info("Voice started - listening")
+            logger.info("Voice started - STT: \(selectedSTTProvider.identifier), TTS: \(selectedTTSProvider.identifier)")
 
         } catch {
             errorMessage = "Failed to start voice: \(error.localizedDescription)"
@@ -385,8 +502,8 @@ public final class ChatViewModel: ObservableObject {
                         let sentence = sentenceBuffer
                         sentenceBuffer = ""
 
-                        // Speak sentence
-                        if voiceState != .idle {
+                        // Speak sentence if voice output enabled
+                        if voiceOutputEnabled && voiceState != .idle {
                             voiceState = .speaking
                             await speakText(sentence)
                         }
@@ -397,7 +514,7 @@ public final class ChatViewModel: ObservableObject {
                     messages[assistantIndex].isStreaming = false
 
                     // Speak remaining buffer
-                    if !sentenceBuffer.isEmpty && voiceState != .idle {
+                    if !sentenceBuffer.isEmpty && voiceOutputEnabled && voiceState != .idle {
                         voiceState = .speaking
                         await speakText(sentenceBuffer)
                     }

@@ -29,7 +29,7 @@ struct ChatViewModelTests {
         UserDefaults.standard.removeObject(forKey: "selectedModel")
         let vm = ChatViewModel()
 
-        #expect(vm.selectedModel == "claude-sonnet-4-20250514")
+        #expect(vm.selectedModel == "claude-sonnet-4-6-20250620")
     }
 
     @Test("Default system prompt is set")
@@ -47,10 +47,10 @@ struct ChatViewModelTests {
     @MainActor
     func modelPersistence() {
         let vm = ChatViewModel()
-        vm.selectedModel = "claude-haiku-4-20250414"
+        vm.selectedModel = "claude-haiku-4-5-20251001"
 
         let stored = UserDefaults.standard.string(forKey: "selectedModel")
-        #expect(stored == "claude-haiku-4-20250414")
+        #expect(stored == "claude-haiku-4-5-20251001")
 
         // Cleanup
         UserDefaults.standard.removeObject(forKey: "selectedModel")

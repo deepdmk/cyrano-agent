@@ -78,7 +78,7 @@ struct LLMProtocolTests {
     @Test("Custom config preserves all fields")
     func customConfig() {
         let config = LLMConfig(
-            model: "claude-sonnet-4-20250514",
+            model: "claude-sonnet-4-6-20250620",
             maxTokens: 4096,
             temperature: 0.5,
             topP: 0.9,
@@ -87,7 +87,7 @@ struct LLMProtocolTests {
             stream: true
         )
 
-        #expect(config.model == "claude-sonnet-4-20250514")
+        #expect(config.model == "claude-sonnet-4-6-20250620")
         #expect(config.maxTokens == 4096)
         #expect(config.temperature == 0.5)
         #expect(config.topP == 0.9)
