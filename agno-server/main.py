@@ -5,11 +5,14 @@ Run with: python -m main
 """
 import sys
 
-from config.logging_config import setup_logging
+from config.logging_config import setup_logging, get_logger
 
 setup_logging()
 
 from agents.orchestrator import run_conversation_cli
+from config.settings import validate_config, ConfigurationError
+
+logger = get_logger(__name__)
 
 
 def main():
@@ -17,6 +20,17 @@ def main():
     print("\n" + "="*60)
     print("  Farmer Conversational AI - Agno Framework PoC")
     print("="*60 + "\n")
+
+    # Validate configuration before starting
+    try:
+        warnings = validate_config()
+        for warning in warnings:
+            logger.warning(warning)
+            print(f"⚠️  {warning}")
+    except ConfigurationError as e:
+        logger.error("Configuration error: %s", e)
+        print(f"\n❌ Configuration Error:\n{e}\n")
+        sys.exit(1)
 
     # Parse command line arguments
     user_id = "test_farmer"

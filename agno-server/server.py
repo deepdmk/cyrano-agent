@@ -6,9 +6,25 @@ sessions, traces, and outputs.
 
 Run with: python -m server
 """
-from config.logging_config import setup_logging
+import sys
+
+from config.logging_config import setup_logging, get_logger
 
 setup_logging()
+
+from config.settings import validate_config, ConfigurationError
+
+logger = get_logger(__name__)
+
+# Validate configuration before importing agents
+try:
+    warnings = validate_config()
+    for warning in warnings:
+        logger.warning(warning)
+except ConfigurationError as e:
+    logger.error("Configuration error: %s", e)
+    print(f"\n❌ Configuration Error:\n{e}\n")
+    sys.exit(1)
 
 from agno.os import AgentOS
 from agno.agent import Agent

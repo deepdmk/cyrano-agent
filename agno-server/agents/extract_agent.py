@@ -141,7 +141,8 @@ def run_extraction(session_id: str, conversation_history: list[dict] | None = No
     Returns:
         List of fact IDs that were created
     """
-    logger.debug("Running extraction for session %s", session_id)
+    logger.info("Extract Agent STARTING for session %s (history: %d messages)",
+                session_id, len(conversation_history) if conversation_history else 0)
 
     # Get facts that existed before this run
     existing_facts = get_facts_by_session(session_id)
@@ -175,16 +176,19 @@ Look for:
 Extract each distinct piece of information separately. Be thorough but do not duplicate information that has already been extracted."""
 
     try:
+        logger.debug("Extract Agent: calling Claude API...")
         agent.run(extraction_prompt)
+        logger.debug("Extract Agent: Claude API call completed")
 
         # Get facts after this run
         new_facts = get_facts_by_session(session_id)
         new_ids = [f["id"] for f in new_facts if f["id"] not in existing_ids]
 
-        logger.info("Extracted %d facts from session %s", len(new_ids), session_id)
+        logger.info("Extract Agent COMPLETED for session %s: %d facts extracted",
+                    session_id, len(new_ids))
         return new_ids
     except Exception as e:
-        logger.error("Extraction failed for session %s: %s", session_id, e, exc_info=True)
+        logger.error("Extract Agent FAILED for session %s: %s", session_id, e, exc_info=True)
         raise
 
 

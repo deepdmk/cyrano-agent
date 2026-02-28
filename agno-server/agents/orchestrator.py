@@ -34,6 +34,10 @@ class ConversationState:
     turn_count: int = 0
     conversation_history: list[dict] = field(default_factory=list)
     background_tasks: list = field(default_factory=list)
+    # Background processing status
+    last_background_error: Optional[str] = None
+    background_success_count: int = 0
+    background_failure_count: int = 0
 
 
 class Orchestrator:
@@ -201,27 +205,44 @@ class Orchestrator:
         2. Data Agent - routes facts and generates questions
         3. Mood Agent - assesses emotional state
         """
+        logger.info("Background pipeline STARTING for turn %d", self.state.turn_count)
+
         try:
             # 1. Run Extract Agent (pass conversation since Agno scopes history per agent)
+            logger.debug("Background: calling Extract Agent...")
             fact_ids = run_extraction(
                 self.state.session_id,
                 conversation_history=list(self.state.conversation_history)
             )
             if fact_ids:
                 logger.info("Extract Agent: %d facts extracted", len(fact_ids))
+            else:
+                logger.debug("Extract Agent: no new facts extracted")
 
             # 2. Run Data Agent
+            logger.debug("Background: calling Data Agent...")
             routing_results = run_data_routing(self.state.session_id)
             if routing_results["facts_routed"] > 0 or routing_results["questions_generated"] > 0:
                 logger.info("Data Agent: routed %d facts, generated %d questions",
                             routing_results['facts_routed'], routing_results['questions_generated'])
+            else:
+                logger.debug("Data Agent: no facts to route")
 
             # 3. Run Mood Agent (every few turns to save API calls)
             if self.state.turn_count % 2 == 0:  # Every 2 turns
+                logger.debug("Background: calling Mood Agent...")
                 self._run_mood_assessment()
 
+            logger.info("Background pipeline COMPLETED for turn %d", self.state.turn_count)
+            self.state.background_success_count += 1
+            self.state.last_background_error = None  # Clear any previous error
+
         except Exception as e:
-            logger.error("Background pipeline error: %s", e, exc_info=True)
+            logger.error("Background pipeline FAILED for turn %d: %s",
+                         self.state.turn_count, e, exc_info=True)
+            # Store the error for status reporting
+            self.state.last_background_error = f"Turn {self.state.turn_count}: {str(e)}"
+            self.state.background_failure_count += 1
 
     def _run_mood_assessment(self):
         """Run mood assessment and update instruction for next turn."""
@@ -260,7 +281,11 @@ class Orchestrator:
             "user_id": self.state.user_id,
             "turn_count": self.state.turn_count,
             "mood_instruction": self.state.mood_instruction,
-            "message_count": len(self.state.conversation_history)
+            "message_count": len(self.state.conversation_history),
+            # Background processing status
+            "background_success_count": self.state.background_success_count,
+            "background_failure_count": self.state.background_failure_count,
+            "last_background_error": self.state.last_background_error,
         }
 
     def wait_for_background_tasks(self, timeout: float = 30.0):
@@ -319,7 +344,13 @@ def run_conversation_cli(user_id: str = "test_farmer", session_id: Optional[str]
                 summary = orchestrator.get_conversation_summary()
                 print(f"\n--- Conversation Status ---")
                 for key, value in summary.items():
-                    print(f"  {key}: {value}")
+                    # Highlight errors in red
+                    if key == "last_background_error" and value:
+                        print(f"  ⚠️  {key}: {value}")
+                    elif key == "background_failure_count" and value > 0:
+                        print(f"  ⚠️  {key}: {value}")
+                    else:
+                        print(f"  {key}: {value}")
                 print("----------------------------\n")
                 continue
 

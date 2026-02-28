@@ -30,3 +30,66 @@ DEFAULT_MODEL_ID = "claude-sonnet-4-5-20250929"
 # Embedding configuration
 EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
 EMBEDDING_DIMENSION = 768
+
+
+class ConfigurationError(Exception):
+    """Raised when required configuration is missing or invalid."""
+    pass
+
+
+def validate_config(require_api_key: bool = True, require_db: bool = True) -> list[str]:
+    """
+    Validate that required configuration is present.
+
+    Args:
+        require_api_key: Whether to require ANTHROPIC_API_KEY
+        require_db: Whether to require the database to be initialized
+
+    Returns:
+        List of warning messages (non-fatal issues)
+
+    Raises:
+        ConfigurationError: If required configuration is missing
+    """
+    errors = []
+    warnings = []
+
+    # Check API key
+    if require_api_key:
+        if not ANTHROPIC_API_KEY:
+            errors.append(
+                "ANTHROPIC_API_KEY is not set. "
+                "Add it to your .env file: ANTHROPIC_API_KEY=sk-ant-..."
+            )
+        elif not ANTHROPIC_API_KEY.startswith(("sk-ant-", "sk-")):
+            warnings.append(
+                "ANTHROPIC_API_KEY doesn't look like a valid Anthropic key "
+                "(expected sk-ant-... or sk-...)"
+            )
+
+    # Check database
+    if require_db:
+        db_path = Path(SQLITE_DB_FILE)
+        if not db_path.exists():
+            errors.append(
+                f"Database not found at {SQLITE_DB_FILE}. "
+                "Run: python -m db.init_db"
+            )
+        elif db_path.stat().st_size == 0:
+            errors.append(
+                f"Database file is empty at {SQLITE_DB_FILE}. "
+                "Run: python -m db.init_db"
+            )
+
+    # Check data directory is writable
+    try:
+        test_file = DATA_DIR / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+    except (OSError, PermissionError) as e:
+        errors.append(f"Data directory is not writable: {DATA_DIR} ({e})")
+
+    if errors:
+        raise ConfigurationError("\n".join(errors))
+
+    return warnings
