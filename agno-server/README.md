@@ -11,12 +11,20 @@ The system consists of 4 agents working in concert:
 - **Data Agent** - Routes facts to databases, generates questions for gaps
 - **Mood Agent** - Monitors emotional state, injects behavioral instructions
 
+## External Services
+
+| Service | Purpose | When Called |
+|---------|---------|-------------|
+| **Anthropic API** | Claude LLM (`claude-sonnet-4-5-20250929`) | Every agent turn |
+| **Hugging Face Hub** | Embedding model (`BAAI/bge-base-en-v1.5`) | First run only (cached locally) |
+
+All other dependencies (SQLite, LanceDB, FastAPI) run locally with no external network calls.
+
 ## Setup
 
 ### Prerequisites
 
 - Python 3.12+
-- PostgreSQL with pgvector extension
 - Anthropic API key
 
 ### Installation
@@ -26,27 +34,14 @@ The system consists of 4 agents working in concert:
 pip install -r requirements.txt
 ```
 
-2. Set up PostgreSQL with pgvector:
-```bash
-# Using Docker (recommended)
-docker run -d \
-  --name pgvector \
-  -e POSTGRES_USER=ai \
-  -e POSTGRES_PASSWORD=ai \
-  -e POSTGRES_DB=ai \
-  -p 5532:5432 \
-  pgvector/pgvector:pg16
-```
-
-3. Copy environment file and configure:
+2. Copy environment file and configure:
 ```bash
 cp .env.example .env
 # Edit .env with your ANTHROPIC_API_KEY
 ```
 
-4. Initialize the database:
+3. Initialize the database:
 ```bash
-cd agno-server
 python -m db.init_db
 ```
 

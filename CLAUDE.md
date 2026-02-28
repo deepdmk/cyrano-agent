@@ -60,6 +60,15 @@ python -m agents.mood_agent <session_id> <user_id>
 | `_ref/talk-agent-personality.md` | Cyrano's complete behavioral specification |
 | `_ref/design-decisions.md` | DD-01 through DD-09 architectural decisions |
 
+## External Services
+
+| Service | Purpose | When Called |
+|---------|---------|-------------|
+| **Anthropic API** | Claude LLM (`claude-sonnet-4-5-20250929`) | Every agent turn |
+| **Hugging Face Hub** | Embedding model (`BAAI/bge-base-en-v1.5`) | First run only (cached locally) |
+
+All other dependencies (SQLite, LanceDB, FastAPI) run locally with no external network calls.
+
 ## Database Structure
 
 All local, no Docker required:
