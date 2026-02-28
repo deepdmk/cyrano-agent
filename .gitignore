@@ -72,3 +72,7 @@ ios-client/CyranoChat/Models/
 # Xcode user data
 xcuserdata/
 *.xcworkspace/
+
+# Generated/build artifacts
+ios-client/CyranoChat/Generated/
+agent-ui/

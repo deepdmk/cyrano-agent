@@ -196,8 +196,11 @@ class Orchestrator:
         3. Mood Agent - assesses emotional state
         """
         try:
-            # 1. Run Extract Agent
-            fact_ids = run_extraction(self.state.session_id)
+            # 1. Run Extract Agent (pass conversation since Agno scopes history per agent)
+            fact_ids = run_extraction(
+                self.state.session_id,
+                conversation_history=list(self.state.conversation_history)
+            )
             if fact_ids:
                 print(f"  [Background] Extracted {len(fact_ids)} facts")
 

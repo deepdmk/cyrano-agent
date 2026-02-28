@@ -7,6 +7,7 @@ import Foundation
 @preconcurrency import AVFoundation
 import Speech
 import Logging
+import os
 
 /// On-device STT service using Apple's Speech framework
 ///
@@ -85,6 +86,7 @@ public actor AppleSpeechSTTService: STTService {
         }
 
         logger.info("Starting Apple Speech stream")
+        os_log(.info, "[CyranoChat] Starting Apple Speech stream, recognizer available: %d", recognizer.isAvailable ? 1 : 0)
 
         isStreaming = true
         sessionStartTime = Date()
@@ -200,11 +202,23 @@ public actor AppleSpeechSTTService: STTService {
     ) {
         if let errorDesc = errorDescription {
             logger.error("Speech recognition error: \(errorDesc)")
+            os_log(.error, "[CyranoChat] Speech recognition error: %{public}@", errorDesc)
+            // Yield an error result so the UI can show it
+            let errorResult = STTResult(
+                transcript: "[STT Error: \(errorDesc)]",
+                isFinal: true,
+                isEndOfUtterance: true,
+                confidence: 0,
+                latency: 0,
+                wordTimestamps: nil
+            )
+            resultContinuation?.yield(errorResult)
             resultContinuation?.finish()
             return
         }
 
         guard !transcript.isEmpty || isFinal else { return }
+        os_log(.info, "[CyranoChat] STT: final=%d '%{public}@'", isFinal ? 1 : 0, String(transcript.prefix(60)))
 
         // Calculate latency
         let latency: TimeInterval
