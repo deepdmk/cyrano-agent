@@ -342,12 +342,35 @@ public final class ChatViewModel: ObservableObject {
         guard let engine = audioEngine,
               let stt = sttService else {
             errorMessage = "Voice services not configured. Check API key."
+            print("[CyranoChat] Voice failed: audioEngine=\(audioEngine != nil), sttService=\(sttService != nil)")
             return
         }
 
         do {
+            // Request microphone permission first
+            #if os(iOS)
+            let micGranted: Bool
+            if #available(iOS 17.0, *) {
+                micGranted = await AVAudioApplication.requestRecordPermission()
+            } else {
+                micGranted = await withCheckedContinuation { cont in
+                    AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                        cont.resume(returning: granted)
+                    }
+                }
+            }
+            guard micGranted else {
+                errorMessage = "Microphone access denied. Enable it in Settings > Privacy > Microphone."
+                print("[CyranoChat] Microphone permission denied")
+                return
+            }
+            print("[CyranoChat] Microphone permission granted")
+            #endif
+
             // Configure and start audio engine
+            print("[CyranoChat] Configuring audio engine...")
             try await engine.configure(config: .default)
+            print("[CyranoChat] Starting audio engine...")
             try await engine.start()
 
             // Subscribe to audio level updates
@@ -393,10 +416,12 @@ public final class ChatViewModel: ObservableObject {
             }
 
             voiceState = .listening
+            print("[CyranoChat] Voice started successfully - STT: \(selectedSTTProvider.identifier), TTS: \(selectedTTSProvider.identifier)")
             logger.info("Voice started - STT: \(selectedSTTProvider.identifier), TTS: \(selectedTTSProvider.identifier)")
 
         } catch {
             errorMessage = "Failed to start voice: \(error.localizedDescription)"
+            print("[CyranoChat] Voice start FAILED: \(error)")
             logger.error("Voice start error: \(error.localizedDescription)")
             await stopVoice()
         }
