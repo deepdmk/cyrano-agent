@@ -4,7 +4,7 @@ import Testing
 import Foundation
 @testable import CyranoChat
 
-@Suite("ChatViewModel")
+@Suite("ChatViewModel", .serialized)
 struct ChatViewModelTests {
 
     // MARK: - Initialization

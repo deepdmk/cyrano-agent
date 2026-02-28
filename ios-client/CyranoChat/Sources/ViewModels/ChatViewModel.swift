@@ -112,14 +112,14 @@ public final class ChatViewModel: ObservableObject {
 
     /// Send a user message and get a response
     private func sendUserMessage(_ text: String) async {
+        // Add user message first so it's always visible in the conversation
+        let userMessage = ChatMessage(role: .user, content: text)
+        messages.append(userMessage)
+
         guard let llm = llmService else {
             errorMessage = "Please set your API key in Settings."
             return
         }
-
-        // Add user message
-        let userMessage = ChatMessage(role: .user, content: text)
-        messages.append(userMessage)
 
         // Add placeholder assistant message
         let assistantMessage = ChatMessage(role: .assistant, content: "", isStreaming: true)

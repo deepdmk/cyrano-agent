@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01F26B9D7A55318BDD875215 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23AC3175685924B02D34E1A /* TTSService.swift */; };
+		0BCF02E47F1AF4E6F3202E57 /* ClaudeAPIServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBEF63CBA44BAA3A5361F00 /* ClaudeAPIServiceTests.swift */; };
 		0BDD82683A2CD95264D0599E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583836BF935D0E4F62FCF78 /* SettingsView.swift */; };
 		11CE9196918DE6A31CE4658B /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */; };
 		14B93F7E6AD44CA5F4087467 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */; };
@@ -19,38 +20,62 @@
 		4CA2FB854772AB20856BB370 /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D96ECECADB065441BFD53 /* Stubs.swift */; };
 		5AEEF65FA725327D2A73B642 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */; };
 		61B2918547BEA479A3268D83 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4424524E2DAE5781B070D850 /* ChatInputBar.swift */; };
+		86F118A464ED008078B9C7BC /* StubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95335727F5E7FDFF79EBC1F /* StubTests.swift */; };
 		8A4DAC95084181D001F1F5C9 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */; };
 		8BD10C0E79C3D30AFD5F50B9 /* AppleTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */; };
+		A4FAA9BCE172585910764AEC /* ChatMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF50F304D41A88C54A4DEEA /* ChatMessageTests.swift */; };
 		ADE632F59EB5BB2EA5DFDE1A /* AppleSpeechSTTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */; };
 		B28DBE60E927090880B91533 /* SileroVADService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075F431D0F73579A272730A4 /* SileroVADService.swift */; };
+		BD7D3A8F0DB30DA2DB31062D /* LLMProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2480FE543CCFBD1817BA2B49 /* LLMProtocolTests.swift */; };
 		BD8B964FFE790B449730A3F0 /* CyranoChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */; };
 		C6EBFDFAE51BB8929A971B6E /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4CCE965A18AC3DB2462C9E /* LLMService.swift */; };
+		C7DC775DCADD3311BACCE77A /* VoiceServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43976C3D8E8084990C13AFBC /* VoiceServiceTests.swift */; };
+		CE38B66ACC92FD29B51D962A /* ChatViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D998AB7420FFE77739B181D8 /* ChatViewModelTests.swift */; };
+		DA7BEA2CB4E272400A0C8247 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5063B5A29059698B3FDEC1 /* KeychainHelperTests.swift */; };
 		DD007E71A160CF18AAD9EF20 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */; };
 		E925230BC6644EEE7A1649EB /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */; };
 		F7B8FF538CF88B9E3E5F63F2 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF9A8E82CB5C81B5BFAD82E /* Logging */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30F52A9CA817A0D679F4CCC8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4445D07D0AB343047D2AC7C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3D497B2E9EFBC06135A8AEA;
+			remoteInfo = CyranoChat;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		075F431D0F73579A272730A4 /* SileroVADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SileroVADService.swift; sourceTree = "<group>"; };
 		0FD78C765D20829240C6A6B2 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		197F82B527A53F61E7DA9BEE /* CyranoChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoChatApp.swift; sourceTree = "<group>"; };
 		1D8CB3ED1DF571E87CB44FCE /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		2480FE543CCFBD1817BA2B49 /* LLMProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProtocolTests.swift; sourceTree = "<group>"; };
 		309BD0EF44DBCD5FC2741E9D /* MessageBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
 		3C4CCE965A18AC3DB2462C9E /* LLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMService.swift; sourceTree = "<group>"; };
+		3FF50F304D41A88C54A4DEEA /* ChatMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageTests.swift; sourceTree = "<group>"; };
+		43976C3D8E8084990C13AFBC /* VoiceServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceServiceTests.swift; sourceTree = "<group>"; };
 		4424524E2DAE5781B070D850 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
 		442461A69AFE22C32800241B /* AppleSpeechSTTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechSTTService.swift; sourceTree = "<group>"; };
 		4658AB3AAC6D82AA9C2B09D3 /* VADService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VADService.swift; sourceTree = "<group>"; };
+		4DBEF63CBA44BAA3A5361F00 /* ClaudeAPIServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIServiceTests.swift; sourceTree = "<group>"; };
 		61BEBE377EF74700BAC08604 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
 		6E44AD0721AA32422DA68875 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		85F1085CB669B731291ED212 /* VoiceIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceIndicatorView.swift; sourceTree = "<group>"; };
 		89A45B477F011643FF82680E /* AudioEngineConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineConfig.swift; sourceTree = "<group>"; };
+		8DBA555588BEA456471F8D38 /* CyranoChatTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CyranoChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92E1A3FD9A4B8A4537F481FA /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		AB5063B5A29059698B3FDEC1 /* KeychainHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperTests.swift; sourceTree = "<group>"; };
 		B12319D237BE41E70BB5A632 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		B6CE99F1383B8E922C4FF320 /* AppleTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleTTSService.swift; sourceTree = "<group>"; };
 		C23AC3175685924B02D34E1A /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
 		C50D96ECECADB065441BFD53 /* Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
+		D998AB7420FFE77739B181D8 /* ChatViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModelTests.swift; sourceTree = "<group>"; };
 		DF9EAB18AC759CF3671DC689 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		E240F8621EE39817014DA849 /* STTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STTService.swift; sourceTree = "<group>"; };
+		E95335727F5E7FDFF79EBC1F /* StubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubTests.swift; sourceTree = "<group>"; };
 		F0F18438DD93121E859A5641 /* CyranoChat.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CyranoChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F583836BF935D0E4F62FCF78 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,8 +160,23 @@
 			isa = PBXGroup;
 			children = (
 				F0F18438DD93121E859A5641 /* CyranoChat.app */,
+				8DBA555588BEA456471F8D38 /* CyranoChatTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		82F319A32E9B19218AC5CBFE /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3FF50F304D41A88C54A4DEEA /* ChatMessageTests.swift */,
+				D998AB7420FFE77739B181D8 /* ChatViewModelTests.swift */,
+				4DBEF63CBA44BAA3A5361F00 /* ClaudeAPIServiceTests.swift */,
+				AB5063B5A29059698B3FDEC1 /* KeychainHelperTests.swift */,
+				2480FE543CCFBD1817BA2B49 /* LLMProtocolTests.swift */,
+				E95335727F5E7FDFF79EBC1F /* StubTests.swift */,
+				43976C3D8E8084990C13AFBC /* VoiceServiceTests.swift */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		93FC4DD582ECB7E5C042379E /* Sources */ = {
@@ -203,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				93FC4DD582ECB7E5C042379E /* Sources */,
+				82F319A32E9B19218AC5CBFE /* Tests */,
 				7F64C7AC4940BF2D205D595A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -210,6 +251,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6C871AFD96C7A7AA698D1F52 /* CyranoChatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62A523076C2A09B089FF480B /* Build configuration list for PBXNativeTarget "CyranoChatTests" */;
+			buildPhases = (
+				6BF75C70FAEE300F326D1C40 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C23C796D03FA5F618D771D73 /* PBXTargetDependency */,
+			);
+			name = CyranoChatTests;
+			packageProductDependencies = (
+			);
+			productName = CyranoChatTests;
+			productReference = 8DBA555588BEA456471F8D38 /* CyranoChatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D3D497B2E9EFBC06135A8AEA /* CyranoChat */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63238F4A06DEC9BBD55F9150 /* Build configuration list for PBXNativeTarget "CyranoChat" */;
@@ -256,11 +315,26 @@
 			projectRoot = "";
 			targets = (
 				D3D497B2E9EFBC06135A8AEA /* CyranoChat */,
+				6C871AFD96C7A7AA698D1F52 /* CyranoChatTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6BF75C70FAEE300F326D1C40 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4FAA9BCE172585910764AEC /* ChatMessageTests.swift in Sources */,
+				CE38B66ACC92FD29B51D962A /* ChatViewModelTests.swift in Sources */,
+				0BCF02E47F1AF4E6F3202E57 /* ClaudeAPIServiceTests.swift in Sources */,
+				DA7BEA2CB4E272400A0C8247 /* KeychainHelperTests.swift in Sources */,
+				BD7D3A8F0DB30DA2DB31062D /* LLMProtocolTests.swift in Sources */,
+				86F118A464ED008078B9C7BC /* StubTests.swift in Sources */,
+				C7DC775DCADD3311BACCE77A /* VoiceServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B80404A7BFADF195FE243B53 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,7 +364,49 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C23C796D03FA5F618D771D73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3D497B2E9EFBC06135A8AEA /* CyranoChat */;
+			targetProxy = 30F52A9CA817A0D679F4CCC8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		170AB6D1A3294FEFDB0E5E22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.chat.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CyranoChat.app/CyranoChat";
+			};
+			name = Release;
+		};
+		29D4E37BAC995235AEF8C19E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.chat.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CyranoChat.app/CyranoChat";
+			};
+			name = Debug;
+		};
 		2DC8BD41FA7428734F8470AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -457,6 +573,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		62A523076C2A09B089FF480B /* Build configuration list for PBXNativeTarget "CyranoChatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29D4E37BAC995235AEF8C19E /* Debug */,
+				170AB6D1A3294FEFDB0E5E22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		63238F4A06DEC9BBD55F9150 /* Build configuration list for PBXNativeTarget "CyranoChat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

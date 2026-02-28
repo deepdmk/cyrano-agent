@@ -91,8 +91,9 @@ struct ClaudeAPIServiceTests {
         let count = await service.estimateTokenCount(for: messages)
 
         // Should be > sum of individual texts due to overhead
-        let textOnly = await service.estimateTokenCount("Hello") +
-                       await service.estimateTokenCount("Hi there!")
+        let a = await service.estimateTokenCount("Hello")
+        let b = await service.estimateTokenCount("Hi there!")
+        let textOnly = a + b
         #expect(count > textOnly)
     }
 
