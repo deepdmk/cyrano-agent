@@ -4,14 +4,16 @@
 
 ## Overview
 
+All data is stored locally in the `data/` directory. No Docker or database server required (DD-09).
+
 The system uses five persistent data stores and one ephemeral vector store:
 
-1. **Sessions Table** -- conversation history (managed by Agno)
-2. **Main DB** -- permanent store of all extracted facts
-3. **Agricultural Data DB** -- Form Database 1 (prototype stand-in for an agro-tracking product)
-4. **Scheduling DB** -- Form Database 2 (prototype stand-in for a calendar/logistics product)
-5. **Planning DB** -- Form Database 3 (prototype stand-in for a planning/projection product)
-6. **Questions Vector DB** -- ephemeral, cleared between sessions
+1. **Sessions Table** -- conversation history (managed by Agno SqliteDb, `data/agno_sessions.db`)
+2. **Main DB** -- permanent store of all extracted facts (SQLite, `data/cyrano.db`)
+3. **Agricultural Data DB** -- Form Database 1, prototype stand-in (SQLite, `data/cyrano.db`)
+4. **Scheduling DB** -- Form Database 2, prototype stand-in (SQLite, `data/cyrano.db`)
+5. **Planning DB** -- Form Database 3, prototype stand-in (SQLite, `data/cyrano.db`)
+6. **Questions Vector DB** -- ephemeral, cleared between sessions (LanceDB, `data/questions_vectordb/`)
 
 ---
 
@@ -29,19 +31,19 @@ The system's permanent knowledge store. Every structured fact extracted from con
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
+| id | TEXT (UUID) | Unique identifier |
 | session_id | VARCHAR | Which conversation session this was extracted from |
 | timestamp | TIMESTAMP | When the extraction occurred |
 | raw_text | TEXT | The farmer's actual words that this fact was derived from |
-| extracted_fact | JSONB | Structured representation of the information (flexible key-value) |
-| domain | VARCHAR[] | Which Form Database(s) this relates to: 'agricultural', 'scheduling', 'planning' (can be multiple) |
+| extracted_fact | JSON (TEXT) | Structured representation of the information (flexible key-value) |
+| domain | TEXT (JSON list) | Which Form Database(s) this relates to: 'agricultural', 'scheduling', 'planning' (can be multiple, stored as JSON array string) |
 | confidence | VARCHAR | How clearly the farmer stated this: 'high', 'medium', 'low' |
 | verification_status | VARCHAR | 'unverified', 'confirmed', 'contradicted' |
 | routed | BOOLEAN | Whether the Data Agent has processed this record (default: false) |
 
 **Notes:**
-- `extracted_fact` is JSONB to allow flexible structure. The Extract Agent writes whatever fields are relevant (crop_type, date, quantity, etc.) without being locked to a rigid schema.
-- `domain` is an array because a single fact can be relevant to multiple Form Databases (e.g., "I'm planning to plant maize next season in the north field" is both agricultural and planning).
+- `extracted_fact` is JSON (stored as TEXT in SQLite) to allow flexible structure. The Extract Agent writes whatever fields are relevant (crop_type, date, quantity, etc.) without being locked to a rigid schema.
+- `domain` is stored as a JSON-serialized list (e.g., `'["agricultural", "planning"]'`) because a single fact can be relevant to multiple Form Databases. Tool functions handle serialization/deserialization.
 - `routed` allows the Data Agent to pick up only new/unprocessed records.
 
 ---
@@ -54,7 +56,7 @@ Prototype stand-in for an agro-tracking product. Five tables covering fields, cr
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
+| id | TEXT (UUID) | Unique identifier |
 | name | VARCHAR | Farmer's name for this plot (e.g., "north field", "the plot by the river") |
 | size_hectares | DECIMAL | Area in hectares |
 | location_description | TEXT | How the farmer describes where it is |
@@ -68,8 +70,8 @@ Prototype stand-in for an agro-tracking product. Five tables covering fields, cr
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
-| field_id | UUID | FK to fields |
+| id | TEXT (UUID) | Unique identifier |
+| field_id | TEXT (UUID) | FK to fields |
 | crop_type | VARCHAR | e.g., maize, rice, beans, cassava |
 | variety | VARCHAR | Specific variety if mentioned |
 | planting_date | DATE | When planted |
@@ -86,9 +88,9 @@ Prototype stand-in for an agro-tracking product. Five tables covering fields, cr
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
-| field_id | UUID | FK to fields |
-| crop_id | UUID | FK to crops (optional -- input may be field-level) |
+| id | TEXT (UUID) | Unique identifier |
+| field_id | TEXT (UUID) | FK to fields |
+| crop_id | TEXT (UUID) | FK to crops (optional -- input may be field-level) |
 | input_type | VARCHAR | 'fertilizer', 'pesticide', 'herbicide', 'seed_treatment', 'other' |
 | product_name | VARCHAR | Brand or generic name if mentioned |
 | quantity | DECIMAL | Amount applied |
@@ -104,9 +106,9 @@ Prototype stand-in for an agro-tracking product. Five tables covering fields, cr
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
-| crop_id | UUID | FK to crops |
-| field_id | UUID | FK to fields |
+| id | TEXT (UUID) | Unique identifier |
+| crop_id | TEXT (UUID) | FK to crops |
+| field_id | TEXT (UUID) | FK to fields |
 | harvest_date | DATE | When harvested |
 | quantity | DECIMAL | Amount harvested |
 | unit | VARCHAR | kg, tons, bags, bushels, etc. |
@@ -122,13 +124,13 @@ Prototype stand-in for an agro-tracking product. Five tables covering fields, cr
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
+| id | TEXT (UUID) | Unique identifier |
 | date | DATE | Date of observation |
 | observation_type | VARCHAR | 'rain', 'drought', 'frost', 'flood', 'hail', 'heat', 'wind', 'other' |
 | severity | VARCHAR | 'mild', 'moderate', 'severe' |
 | description | TEXT | Farmer's own description |
 | impact | TEXT | How it affected crops or activities |
-| field_id | UUID | FK to fields (optional -- may be general) |
+| field_id | TEXT (UUID) | FK to fields (optional -- may be general) |
 | notes | TEXT | |
 | created_at | TIMESTAMP | |
 | updated_at | TIMESTAMP | |
@@ -143,7 +145,7 @@ Prototype stand-in for a calendar/logistics product. One table.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
+| id | TEXT (UUID) | Unique identifier |
 | event_type | VARCHAR | 'meeting', 'delivery', 'market', 'equipment', 'labor', 'veterinary', 'training', 'other' |
 | description | TEXT | What this event is about |
 | date | DATE | When it happens |
@@ -167,12 +169,12 @@ Prototype stand-in for a planning/projection product. One table.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
+| id | TEXT (UUID) | Unique identifier |
 | category | VARCHAR | 'planting', 'expansion', 'investment', 'rotation', 'technique', 'infrastructure', 'other' |
 | description | TEXT | What the farmer plans to do |
 | target_season | VARCHAR | e.g., 'next rainy season', 'dry season 2026', 'March planting' |
 | target_year | INTEGER | Year if specified |
-| field_id | UUID | FK to agricultural fields table (optional) |
+| field_id | TEXT (UUID) | FK to agricultural fields table (optional) |
 | resources_needed | TEXT | What they need to execute this plan |
 | estimated_cost | DECIMAL | Budget if mentioned |
 | currency | VARCHAR | |
@@ -185,25 +187,26 @@ Prototype stand-in for a planning/projection product. One table.
 
 ## Questions Vector DB
 
-Ephemeral PgVector table. Cleared at the start of each new session.
+Ephemeral LanceDB table. Cleared at the start of each new session. Stored in `data/questions_vectordb/`.
 
-### Table: `session_questions`
+### LanceDB Table: `session_questions`
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | UUID | Unique identifier |
-| session_id | VARCHAR | Current session (for cleanup) |
-| question_text | TEXT | Natural-language question for the Talk Agent to weave into conversation |
-| source_database | VARCHAR | Which Form Database this gap was identified in |
-| source_table | VARCHAR | Which table the gap is in |
-| source_field | VARCHAR | Which field is missing or unclear |
-| source_record_id | UUID | Which record the gap relates to (optional) |
-| priority | VARCHAR | 'high', 'medium', 'low' |
-| embedding | VECTOR(768) | Vector embedding for similarity search |
-| created_at | TIMESTAMP | |
+| id | STRING | UUID as string |
+| session_id | STRING | Current session (for filtering and cleanup) |
+| question_text | STRING | Natural-language question for the Talk Agent to weave into conversation |
+| source_database | STRING | Which Form Database this gap was identified in |
+| source_table | STRING | Which table the gap is in |
+| source_field | STRING | Which field is missing or unclear |
+| source_record_id | STRING | Which record the gap relates to (optional, empty string if N/A) |
+| priority | STRING | 'high', 'medium', 'low' |
+| vector | FLOAT32[768] | Embedding vector for similarity search |
+| created_at | STRING | ISO timestamp |
 
 **Notes:**
-- The Talk Agent queries this table via vector similarity search against its current conversation context to find questions that fit naturally.
-- Embedding dimension (768) assumes a base embedder like BAAI/bge-base-v1.5 or intfloat/e5-base-v2. Must be locked early -- changing embedders later requires re-embedding everything.
-- All records for a session_id are deleted at the start of a new session.
+- Uses LanceDB's built-in vector similarity search (no pgvector extension needed).
+- The Talk Agent queries this table via `.search(embedding).where(session_filter).limit(n)` to find questions that fit naturally into the current conversation.
+- Embedding dimension (768) assumes BAAI/bge-base-v1.5 (DD-08). Must be locked early -- changing embedders later requires re-embedding everything.
+- The entire table is dropped and recreated at the start of each new session (simplest clearing approach for LanceDB).
 - The Data Agent regenerates questions fresh each session based on current database state.

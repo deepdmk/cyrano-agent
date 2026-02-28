@@ -1,5 +1,6 @@
 """
 SQLAlchemy models for all database tables.
+Uses SQLite-compatible types only.
 """
 import uuid
 from datetime import datetime, date, time
@@ -8,16 +9,19 @@ from typing import Optional, List
 
 from sqlalchemy import (
     Column, String, Text, Boolean, Integer, Date, Time,
-    DateTime, Numeric, ForeignKey, ARRAY
+    DateTime, Numeric, ForeignKey, JSON
 )
-from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import DeclarativeBase, relationship
-from pgvector.sqlalchemy import Vector
 
 
 class Base(DeclarativeBase):
     """Base class for all models."""
     pass
+
+
+def generate_uuid() -> str:
+    """Generate a UUID as a string (SQLite does not have a native UUID type)."""
+    return str(uuid.uuid4())
 
 
 # =============================================================================
@@ -31,14 +35,14 @@ class ExtractedFact(Base):
     """
     __tablename__ = "extracted_facts"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
     session_id = Column(String, nullable=False, index=True)
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
     raw_text = Column(Text, nullable=False)
-    extracted_fact = Column(JSONB, nullable=False)
-    domain = Column(ARRAY(String), nullable=False)  # ['agricultural', 'scheduling', 'planning']
+    extracted_fact = Column(JSON, nullable=False)  # Was JSONB, now JSON (stored as TEXT in SQLite)
+    domain = Column(Text, nullable=False)  # Was ARRAY(String), now JSON-serialized list stored as Text
     confidence = Column(String, nullable=False)  # 'high', 'medium', 'low'
-    verification_status = Column(String, default="unverified")  # 'unverified', 'confirmed', 'contradicted'
+    verification_status = Column(String, default="unverified")
     routed = Column(Boolean, default=False, index=True)
 
 
@@ -50,7 +54,7 @@ class Field(Base):
     """Agricultural field/plot information."""
     __tablename__ = "fields"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
     name = Column(String, nullable=False)
     size_hectares = Column(Numeric(10, 2))
     location_description = Column(Text)
@@ -72,8 +76,8 @@ class Crop(Base):
     """Crop planted in a field."""
     __tablename__ = "crops"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    field_id = Column(UUID(as_uuid=True), ForeignKey("fields.id"), nullable=False)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    field_id = Column(String(36), ForeignKey("fields.id"), nullable=False)
     crop_type = Column(String, nullable=False)
     variety = Column(String)
     planting_date = Column(Date)
@@ -81,7 +85,7 @@ class Crop(Base):
     actual_harvest_date = Column(Date)
     seed_source = Column(String)
     seed_quantity = Column(String)
-    status = Column(String)  # 'planted', 'growing', 'harvested', 'failed'
+    status = Column(String)
     notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -96,10 +100,10 @@ class Input(Base):
     """Agricultural inputs (fertilizer, pesticide, etc.)."""
     __tablename__ = "inputs"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    field_id = Column(UUID(as_uuid=True), ForeignKey("fields.id"), nullable=False)
-    crop_id = Column(UUID(as_uuid=True), ForeignKey("crops.id"))  # Optional
-    input_type = Column(String, nullable=False)  # 'fertilizer', 'pesticide', 'herbicide', etc.
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    field_id = Column(String(36), ForeignKey("fields.id"), nullable=False)
+    crop_id = Column(String(36), ForeignKey("crops.id"))
+    input_type = Column(String, nullable=False)
     product_name = Column(String)
     quantity = Column(Numeric(10, 2))
     unit = Column(String)
@@ -119,9 +123,9 @@ class Yield(Base):
     """Harvest/yield records."""
     __tablename__ = "yields"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    crop_id = Column(UUID(as_uuid=True), ForeignKey("crops.id"), nullable=False)
-    field_id = Column(UUID(as_uuid=True), ForeignKey("fields.id"), nullable=False)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    crop_id = Column(String(36), ForeignKey("crops.id"), nullable=False)
+    field_id = Column(String(36), ForeignKey("fields.id"), nullable=False)
     harvest_date = Column(Date)
     quantity = Column(Numeric(10, 2))
     unit = Column(String)
@@ -142,13 +146,13 @@ class WeatherObservation(Base):
     """Weather observations reported by the farmer."""
     __tablename__ = "weather_observations"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
     date = Column(Date, nullable=False)
-    observation_type = Column(String, nullable=False)  # 'rain', 'drought', 'frost', etc.
-    severity = Column(String)  # 'mild', 'moderate', 'severe'
+    observation_type = Column(String, nullable=False)
+    severity = Column(String)
     description = Column(Text)
     impact = Column(Text)
-    field_id = Column(UUID(as_uuid=True), ForeignKey("fields.id"))  # Optional
+    field_id = Column(String(36), ForeignKey("fields.id"))
     notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -165,16 +169,16 @@ class Event(Base):
     """Calendar/scheduling events."""
     __tablename__ = "events"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    event_type = Column(String, nullable=False)  # 'meeting', 'delivery', 'market', etc.
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    event_type = Column(String, nullable=False)
     description = Column(Text)
     date = Column(Date)
     time = Column(Time)
     location = Column(String)
     people_involved = Column(Text)
     is_recurring = Column(Boolean, default=False)
-    recurrence_frequency = Column(String)  # 'daily', 'weekly', 'monthly', etc.
-    status = Column(String, default="planned")  # 'planned', 'completed', 'cancelled'
+    recurrence_frequency = Column(String)
+    status = Column(String, default="planned")
     notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -188,16 +192,16 @@ class Plan(Base):
     """Future plans and intentions."""
     __tablename__ = "plans"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    category = Column(String, nullable=False)  # 'planting', 'expansion', 'investment', etc.
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    category = Column(String, nullable=False)
     description = Column(Text, nullable=False)
     target_season = Column(String)
     target_year = Column(Integer)
-    field_id = Column(UUID(as_uuid=True), ForeignKey("fields.id"))  # Optional
+    field_id = Column(String(36), ForeignKey("fields.id"))
     resources_needed = Column(Text)
     estimated_cost = Column(Numeric(10, 2))
     currency = Column(String)
-    status = Column(String, default="intended")  # 'intended', 'in_progress', 'completed', 'abandoned'
+    status = Column(String, default="intended")
     notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -207,23 +211,6 @@ class Plan(Base):
 
 
 # =============================================================================
-# Questions Vector DB
+# NOTE: SessionQuestion has been REMOVED from SQLAlchemy models.
+# Questions now live in LanceDB (see tools/questions_tools.py).
 # =============================================================================
-
-class SessionQuestion(Base):
-    """
-    Questions Vector DB: Ephemeral storage for questions the Talk Agent can weave
-    into conversation. Cleared at the start of each new session.
-    """
-    __tablename__ = "session_questions"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id = Column(String, nullable=False, index=True)
-    question_text = Column(Text, nullable=False)
-    source_database = Column(String, nullable=False)
-    source_table = Column(String, nullable=False)
-    source_field = Column(String, nullable=False)
-    source_record_id = Column(UUID(as_uuid=True))  # Optional
-    priority = Column(String, nullable=False)  # 'high', 'medium', 'low'
-    embedding = Column(Vector(768), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)

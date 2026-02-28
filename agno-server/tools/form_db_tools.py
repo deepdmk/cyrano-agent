@@ -5,7 +5,6 @@ Used by Data Agent to route extracted facts and analyze gaps.
 from datetime import date, time, datetime
 from decimal import Decimal
 from typing import Optional, Any
-from uuid import UUID
 
 from sqlalchemy import select, update, func
 from sqlalchemy.orm import Session
@@ -26,9 +25,7 @@ def _to_dict(obj, exclude: list[str] = None) -> dict:
         if column.name in exclude:
             continue
         value = getattr(obj, column.name)
-        if isinstance(value, UUID):
-            value = str(value)
-        elif isinstance(value, (datetime, date)):
+        if isinstance(value, (datetime, date)):
             value = value.isoformat()
         elif isinstance(value, time):
             value = value.isoformat()
@@ -115,7 +112,7 @@ def update_field(field_id: str, **kwargs) -> str:
 
         stmt = (
             update(Field)
-            .where(Field.id == UUID(field_id))
+            .where(Field.id == field_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -129,7 +126,7 @@ def update_field(field_id: str, **kwargs) -> str:
 def get_field(field_id: str) -> Optional[dict]:
     """Get a field by ID."""
     with SessionLocal() as db:
-        field = db.get(Field, UUID(field_id))
+        field = db.get(Field, field_id)
         return _to_dict(field) if field else None
 
 
@@ -184,7 +181,7 @@ def create_crop(
     """
     with SessionLocal() as db:
         crop = Crop(
-            field_id=UUID(field_id),
+            field_id=field_id,
             crop_type=crop_type,
             variety=variety,
             planting_date=_parse_date(planting_date),
@@ -211,7 +208,7 @@ def update_crop(crop_id: str, **kwargs) -> str:
 
         stmt = (
             update(Crop)
-            .where(Crop.id == UUID(crop_id))
+            .where(Crop.id == crop_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -225,7 +222,7 @@ def update_crop(crop_id: str, **kwargs) -> str:
 def get_crop(crop_id: str) -> Optional[dict]:
     """Get a crop by ID."""
     with SessionLocal() as db:
-        crop = db.get(Crop, UUID(crop_id))
+        crop = db.get(Crop, crop_id)
         return _to_dict(crop) if crop else None
 
 
@@ -239,7 +236,7 @@ def get_all_crops() -> list[dict]:
 def get_crops_by_field(field_id: str) -> list[dict]:
     """Get all crops in a specific field."""
     with SessionLocal() as db:
-        stmt = select(Crop).where(Crop.field_id == UUID(field_id))
+        stmt = select(Crop).where(Crop.field_id == field_id)
         crops = db.execute(stmt).scalars().all()
         return [_to_dict(c) for c in crops]
 
@@ -280,8 +277,8 @@ def create_input(
     """
     with SessionLocal() as db:
         input_record = Input(
-            field_id=UUID(field_id),
-            crop_id=UUID(crop_id) if crop_id else None,
+            field_id=field_id,
+            crop_id=crop_id if crop_id else None,
             input_type=input_type,
             product_name=product_name,
             quantity=Decimal(str(quantity)) if quantity else None,
@@ -306,12 +303,11 @@ def update_input(input_id: str, **kwargs) -> str:
             kwargs["quantity"] = Decimal(str(kwargs["quantity"]))
         if "cost" in kwargs and kwargs["cost"] is not None:
             kwargs["cost"] = Decimal(str(kwargs["cost"]))
-        if "crop_id" in kwargs and kwargs["crop_id"]:
-            kwargs["crop_id"] = UUID(kwargs["crop_id"])
+        # crop_id is already a string, no conversion needed
 
         stmt = (
             update(Input)
-            .where(Input.id == UUID(input_id))
+            .where(Input.id == input_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -325,7 +321,7 @@ def update_input(input_id: str, **kwargs) -> str:
 def get_input(input_id: str) -> Optional[dict]:
     """Get an input by ID."""
     with SessionLocal() as db:
-        input_record = db.get(Input, UUID(input_id))
+        input_record = db.get(Input, input_id)
         return _to_dict(input_record) if input_record else None
 
 
@@ -372,8 +368,8 @@ def create_yield(
     """
     with SessionLocal() as db:
         yield_record = Yield(
-            crop_id=UUID(crop_id),
-            field_id=UUID(field_id),
+            crop_id=crop_id,
+            field_id=field_id,
             harvest_date=_parse_date(harvest_date),
             quantity=Decimal(str(quantity)) if quantity else None,
             unit=unit,
@@ -401,7 +397,7 @@ def update_yield(yield_id: str, **kwargs) -> str:
 
         stmt = (
             update(Yield)
-            .where(Yield.id == UUID(yield_id))
+            .where(Yield.id == yield_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -415,7 +411,7 @@ def update_yield(yield_id: str, **kwargs) -> str:
 def get_yield(yield_id: str) -> Optional[dict]:
     """Get a yield by ID."""
     with SessionLocal() as db:
-        yield_record = db.get(Yield, UUID(yield_id))
+        yield_record = db.get(Yield, yield_id)
         return _to_dict(yield_record) if yield_record else None
 
 
@@ -461,7 +457,7 @@ def create_weather_observation(
             severity=severity,
             description=description,
             impact=impact,
-            field_id=UUID(field_id) if field_id else None,
+            field_id=field_id if field_id else None,
             notes=notes
         )
         db.add(obs)
@@ -475,12 +471,11 @@ def update_weather_observation(observation_id: str, **kwargs) -> str:
     with SessionLocal() as db:
         if "date" in kwargs:
             kwargs["date"] = _parse_date(kwargs["date"])
-        if "field_id" in kwargs and kwargs["field_id"]:
-            kwargs["field_id"] = UUID(kwargs["field_id"])
+        # field_id is already a string, no conversion needed
 
         stmt = (
             update(WeatherObservation)
-            .where(WeatherObservation.id == UUID(observation_id))
+            .where(WeatherObservation.id == observation_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -494,7 +489,7 @@ def update_weather_observation(observation_id: str, **kwargs) -> str:
 def get_weather_observation(observation_id: str) -> Optional[dict]:
     """Get a weather observation by ID."""
     with SessionLocal() as db:
-        obs = db.get(WeatherObservation, UUID(observation_id))
+        obs = db.get(WeatherObservation, observation_id)
         return _to_dict(obs) if obs else None
 
 
@@ -568,7 +563,7 @@ def update_event(event_id: str, **kwargs) -> str:
 
         stmt = (
             update(Event)
-            .where(Event.id == UUID(event_id))
+            .where(Event.id == event_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -582,7 +577,7 @@ def update_event(event_id: str, **kwargs) -> str:
 def get_event(event_id: str) -> Optional[dict]:
     """Get an event by ID."""
     with SessionLocal() as db:
-        event = db.get(Event, UUID(event_id))
+        event = db.get(Event, event_id)
         return _to_dict(event) if event else None
 
 
@@ -633,7 +628,7 @@ def create_plan(
             description=description,
             target_season=target_season,
             target_year=target_year,
-            field_id=UUID(field_id) if field_id else None,
+            field_id=field_id if field_id else None,
             resources_needed=resources_needed,
             estimated_cost=Decimal(str(estimated_cost)) if estimated_cost else None,
             currency=currency,
@@ -649,14 +644,13 @@ def create_plan(
 def update_plan(plan_id: str, **kwargs) -> str:
     """Update an existing plan."""
     with SessionLocal() as db:
-        if "field_id" in kwargs and kwargs["field_id"]:
-            kwargs["field_id"] = UUID(kwargs["field_id"])
+        # field_id is already a string, no conversion needed
         if "estimated_cost" in kwargs and kwargs["estimated_cost"] is not None:
             kwargs["estimated_cost"] = Decimal(str(kwargs["estimated_cost"]))
 
         stmt = (
             update(Plan)
-            .where(Plan.id == UUID(plan_id))
+            .where(Plan.id == plan_id)
             .values(**kwargs)
         )
         result = db.execute(stmt)
@@ -670,7 +664,7 @@ def update_plan(plan_id: str, **kwargs) -> str:
 def get_plan(plan_id: str) -> Optional[dict]:
     """Get a plan by ID."""
     with SessionLocal() as db:
-        plan = db.get(Plan, UUID(plan_id))
+        plan = db.get(Plan, plan_id)
         return _to_dict(plan) if plan else None
 
 

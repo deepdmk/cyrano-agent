@@ -9,10 +9,10 @@ from typing import Optional
 
 from agno.agent import Agent
 from agno.models.anthropic import Claude
-from agno.db.postgres import PostgresDb
+from agno.db.sqlite import SqliteDb
 from agno.tools.decorator import tool
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DATABASE_URL
+from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
 from tools.main_db_tools import write_extracted_fact, get_facts_by_session
 
 
@@ -111,8 +111,8 @@ def create_extract_agent(session_id: str) -> Agent:
     agent = Agent(
         name="Extract Agent",
         model=Claude(id=DEFAULT_MODEL_ID),
-        db=PostgresDb(
-            db_url=AGNO_DATABASE_URL
+        db=SqliteDb(
+            db_file=AGNO_DB_FILE
         ),
         session_id=session_id,  # Same session as Talk Agent to read conversation
         instructions=[EXTRACT_AGENT_INSTRUCTIONS],

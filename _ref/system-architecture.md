@@ -62,7 +62,7 @@ The core product is the conversational data capture layer. The downstream databa
 - Does not categorize into Form Database schemas. That is the Data Agent's job.
 - Writes to the Main DB, which is permanent and append-only.
 
-**Agno implementation:** Agent triggered via post-hook on Talk Agent or background workflow step. Reads shared session by session_id. Writes to Main DB (PostgreSQL).
+**Agno implementation:** Agent triggered via post-hook on Talk Agent or background workflow step. Reads shared session by session_id. Writes to Main DB (SQLite).
 
 ---
 
@@ -107,14 +107,14 @@ The core product is the conversational data capture layer. The downstream databa
 ## Data Stores
 
 ### Sessions Table
-- **Type:** Relational (PostgreSQL, `agno_sessions`)
+- **Type:** Relational (SQLite via Agno SqliteDb, `data/agno_sessions.db`)
 - **Lifecycle:** Append-only during session, retained across sessions
 - **Written by:** Talk Agent
 - **Read by:** Extract Agent, Mood Agent, Talk Agent (own history)
 - **Contains:** Full conversation history, turn-by-turn
 
 ### Main DB
-- **Type:** Relational (PostgreSQL)
+- **Type:** Relational (SQLite, `data/cyrano.db`)
 - **Lifecycle:** Permanent, append-only
 - **Written by:** Extract Agent
 - **Read by:** Data Agent
@@ -122,7 +122,7 @@ The core product is the conversational data capture layer. The downstream databa
 - **Purpose:** The system's permanent knowledge store. This is what the system "knows" about the farmer.
 
 ### Questions Vector DB
-- **Type:** Vector (PgVector)
+- **Type:** Vector (LanceDB, `data/questions_vectordb/`)
 - **Lifecycle:** Illusory -- cleared at the start of each new session
 - **Written by:** Data Agent
 - **Read by:** Talk Agent (via vector similarity search against current conversation)
@@ -130,7 +130,7 @@ The core product is the conversational data capture layer. The downstream databa
 - **Purpose:** Gives the Talk Agent contextually relevant questions to weave into conversation
 
 ### Form Databases (Prototype)
-- **Type:** Relational (PostgreSQL)
+- **Type:** Relational (SQLite, `data/cyrano.db`)
 - **Lifecycle:** Persistent, updated by Data Agent
 - **Written by:** Data Agent
 - **Read by:** Data Agent (to assess current state and identify gaps), external products (future)
@@ -423,6 +423,7 @@ All design decisions are documented in detail in `_ref/design-decisions.md`. Sum
 6. **Mood Agent memory (DD-06):** Persistent memory via `update_memory_on_run=True`, separate from Talk Agent session.
 7. **Form Databases (DD-07):** Prototype stand-ins, designed to be swappable. Tool functions abstract the schemas.
 8. **Embedding strategy (DD-08):** 768-dim embedder, shared utility function for write and search consistency.
+9. **Simplified database stack (DD-09):** SQLite + LanceDB replace PostgreSQL + pgvector. Zero infrastructure, file-based, no Docker.
 
 Schemas are defined in `_ref/database-schemas.md`.
 Implementation instructions are in `_ref/claude-code-instructions.md`.

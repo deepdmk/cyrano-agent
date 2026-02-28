@@ -149,3 +149,37 @@ def generate_embedding(text: str) -> list[float]:
 **Why:** Changing the embedder later requires re-embedding all vectors in the Questions Vector DB. Since the Questions DB is illusory (cleared each session), this is less painful than it would be for a permanent vector store, but consistency between write and read is still essential.
 
 **Note for prototype:** If a local or lightweight embedding approach is easier to set up initially, use it. The Questions DB is ephemeral, so re-embedding cost on model change is low. The important thing is that the same function is used for both writing and searching.
+
+---
+
+## DD-09: Simplified Database Stack (No Docker)
+
+**Decision:** Replace PostgreSQL + pgvector (Docker) with SQLite + LanceDB (embedded, file-based).
+
+**How it works:**
+
+Three storage components, all file-based, all in a local `data/` directory:
+
+1. **SQLite** (`data/cyrano.db`) for all relational tables: Main DB (`extracted_facts`), Agricultural DB (`fields`, `crops`, `inputs`, `yields`, `weather_observations`), Scheduling DB (`events`), Planning DB (`plans`).
+
+2. **Agno SqliteDb** (`data/agno_sessions.db`) for Agno's built-in session persistence. Uses `agno.db.sqlite.SqliteDb` instead of `agno.db.postgres.PostgresDb`.
+
+3. **LanceDB** (`data/questions_vectordb/`) for the Questions Vector DB. Embedded vector database with built-in similarity search. Replaces the `session_questions` PostgreSQL table with pgvector extension.
+
+**Type mapping from PostgreSQL to SQLite:**
+
+| PostgreSQL Type | SQLite Replacement | Notes |
+|---|---|---|
+| `UUID(as_uuid=True)` | `String(36)` | UUIDs stored as text strings |
+| `JSONB` | `JSON` (SQLAlchemy) | Stored as TEXT in SQLite |
+| `ARRAY(String)` | `Text` | JSON-serialized list |
+| `Vector(768)` | N/A | Moved to LanceDB entirely |
+
+**Why:** The prototype does not need a database server. SQLite handles all relational queries the system needs. LanceDB provides vector similarity search without any external process or extension. The entire database layer becomes "install pip packages and run `python -m db.init_db`" with zero infrastructure dependencies. Docker is no longer required for any part of the system.
+
+**Trade-offs accepted:**
+- SQLite has limited concurrency (single writer at a time). Acceptable for a single-user prototype where background agents run sequentially (DD-04).
+- LanceDB is less mature than pgvector for production workloads. Acceptable because the Questions DB is ephemeral (cleared each session) and the prototype is single-user.
+- No network-accessible database. Acceptable for a prototype that runs locally.
+
+**Migration path to production:** When moving to production, swap `SqliteDb` back to `PostgresDb` and `LanceDB` to `PgVector` (or any managed vector DB). The tool function signatures and agent code remain unchanged. Only `db/connection.py`, `config/settings.py`, and `tools/questions_tools.py` need updating.

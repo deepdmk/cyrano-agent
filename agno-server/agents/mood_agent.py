@@ -15,9 +15,9 @@ from pydantic import BaseModel, Field
 
 from agno.agent import Agent
 from agno.models.anthropic import Claude
-from agno.db.postgres import PostgresDb
+from agno.db.sqlite import SqliteDb
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DATABASE_URL
+from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
 
 
 class MoodAction(str, Enum):
@@ -133,8 +133,8 @@ def create_mood_agent(user_id: str, talk_session_id: str) -> Agent:
     agent = Agent(
         name="Mood Agent",
         model=Claude(id=DEFAULT_MODEL_ID),
-        db=PostgresDb(
-            db_url=AGNO_DATABASE_URL
+        db=SqliteDb(
+            db_file=AGNO_DB_FILE
         ),
         session_id=mood_session_id,
         user_id=user_id,

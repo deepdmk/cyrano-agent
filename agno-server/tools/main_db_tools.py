@@ -2,9 +2,9 @@
 Tools for reading/writing the Main DB (extracted_facts table).
 Used by Extract Agent to write facts and Data Agent to read/process them.
 """
+import json
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
@@ -38,7 +38,7 @@ def write_extracted_fact(
             session_id=session_id,
             raw_text=raw_text,
             extracted_fact=extracted_fact,
-            domain=domain,
+            domain=json.dumps(domain),
             confidence=confidence,
             verification_status="unverified",
             routed=False
@@ -73,7 +73,7 @@ def get_unrouted_facts() -> list[dict]:
                 "session_id": fact.session_id,
                 "raw_text": fact.raw_text,
                 "extracted_fact": fact.extracted_fact,
-                "domain": fact.domain,
+                "domain": json.loads(fact.domain) if isinstance(fact.domain, str) else fact.domain,
                 "confidence": fact.confidence,
                 "timestamp": fact.timestamp.isoformat() if fact.timestamp else None
             }
@@ -94,7 +94,7 @@ def mark_fact_routed(fact_id: str) -> str:
     with SessionLocal() as db:
         stmt = (
             update(ExtractedFact)
-            .where(ExtractedFact.id == UUID(fact_id))
+            .where(ExtractedFact.id == fact_id)
             .values(routed=True)
         )
         result = db.execute(stmt)
@@ -125,7 +125,7 @@ def get_facts_by_session(session_id: str) -> list[dict]:
                 "id": str(fact.id),
                 "raw_text": fact.raw_text,
                 "extracted_fact": fact.extracted_fact,
-                "domain": fact.domain,
+                "domain": json.loads(fact.domain) if isinstance(fact.domain, str) else fact.domain,
                 "confidence": fact.confidence,
                 "routed": fact.routed,
                 "timestamp": fact.timestamp.isoformat() if fact.timestamp else None
@@ -183,7 +183,7 @@ def get_recent_fact_for_user(user_id: str) -> Optional[dict]:
                     "id": str(result.id),
                     "raw_text": result.raw_text,
                     "extracted_fact": result.extracted_fact,
-                    "domain": result.domain,
+                    "domain": json.loads(result.domain) if isinstance(result.domain, str) else result.domain,
                     "confidence": result.confidence,
                     "timestamp": result.timestamp.isoformat() if result.timestamp else None
                 }
@@ -204,7 +204,7 @@ def get_recent_fact_for_user(user_id: str) -> Optional[dict]:
                     "id": str(result.id),
                     "raw_text": result.raw_text,
                     "extracted_fact": result.extracted_fact,
-                    "domain": result.domain,
+                    "domain": json.loads(result.domain) if isinstance(result.domain, str) else result.domain,
                     "confidence": result.confidence,
                     "timestamp": result.timestamp.isoformat() if result.timestamp else None
                 }

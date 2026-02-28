@@ -1,0 +1,9 @@
+# Data directory contents (SQLite DBs, LanceDB files)
+data/*
+!data/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.env
+.venv/

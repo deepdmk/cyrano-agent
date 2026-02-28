@@ -1,9 +1,8 @@
 agno
 anthropic
-psycopg[binary]
-psycopg2-binary
 sqlalchemy
-pgvector
+lancedb
+pyarrow
 python-dotenv
 pydantic
 sentence-transformers
