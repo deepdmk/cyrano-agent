@@ -83,6 +83,11 @@ Log format: `timestamp | level | module | message`
 
 To view logs in real time: `tail -f data/cyrano.log`
 
+To log the full prompt sent to Cyrano (useful for debugging):
+```bash
+LOG_PROMPTS=1 python -m main [user_id] [session_id]
+```
+
 ## Critical Design Decisions
 
 - **DD-01**: Mood Agent injects instructions via `[System guidance: ...]` prepended to user message
