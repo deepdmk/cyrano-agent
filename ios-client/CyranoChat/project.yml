@@ -31,9 +31,6 @@ targets:
           - Info.plist
     resources:
       - path: Resources
-      - path: Models
-        optional: true
-        buildPhase: resources
     dependencies:
       - package: swift-log
         product: Logging
@@ -69,6 +66,24 @@ targets:
           fi
           if [ ! -d "${SRCROOT}/Models/GLM-ASR/GLMASRWhisperEncoder.mlmodelc" ]; then
             echo "warning: GLM-ASR models not found. Run Scripts/download_models.sh or copy from unamentis."
+          fi
+        basedOnDependencyAnalysis: false
+    postBuildScripts:
+      - name: Copy Models to Bundle
+        script: |
+          MODELS_SRC="${SRCROOT}/Models"
+          MODELS_DST="${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Models"
+          mkdir -p "${MODELS_DST}/PocketTTS/voices"
+          mkdir -p "${MODELS_DST}/GLM-ASR"
+          # Copy PocketTTS models
+          if [ -f "${MODELS_SRC}/PocketTTS/model.safetensors" ]; then
+            rsync -a "${MODELS_SRC}/PocketTTS/" "${MODELS_DST}/PocketTTS/"
+            echo "Copied PocketTTS models to bundle"
+          fi
+          # Copy GLM-ASR models
+          if [ -d "${MODELS_SRC}/GLM-ASR/GLMASRWhisperEncoder.mlmodelc" ]; then
+            rsync -a "${MODELS_SRC}/GLM-ASR/" "${MODELS_DST}/GLM-ASR/"
+            echo "Copied GLM-ASR models to bundle"
           fi
         basedOnDependencyAnalysis: false
   CyranoChatTests:

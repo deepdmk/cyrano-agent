@@ -327,6 +327,7 @@
 				3B9B33D3364A2FD58BB3DC1D /* Check Models */,
 				B80404A7BFADF195FE243B53 /* Sources */,
 				9F0A6547F5646FD742C66812 /* Frameworks */,
+				FAA5011B68EB67725920D577 /* Copy Models to Bundle */,
 			);
 			buildRules = (
 			);
@@ -402,6 +403,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ ! -f \"${SRCROOT}/Models/PocketTTS/model.safetensors\" ]; then\n  echo \"warning: Pocket TTS models not found. Run Scripts/download_models.sh or copy from unamentis.\"\nfi\nif [ ! -d \"${SRCROOT}/Models/GLM-ASR/GLMASRWhisperEncoder.mlmodelc\" ]; then\n  echo \"warning: GLM-ASR models not found. Run Scripts/download_models.sh or copy from unamentis.\"\nfi\n";
+		};
+		FAA5011B68EB67725920D577 /* Copy Models to Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Models to Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "MODELS_SRC=\"${SRCROOT}/Models\"\nMODELS_DST=\"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Models\"\nmkdir -p \"${MODELS_DST}/PocketTTS/voices\"\nmkdir -p \"${MODELS_DST}/GLM-ASR\"\n# Copy PocketTTS models\nif [ -f \"${MODELS_SRC}/PocketTTS/model.safetensors\" ]; then\n  rsync -a \"${MODELS_SRC}/PocketTTS/\" \"${MODELS_DST}/PocketTTS/\"\n  echo \"Copied PocketTTS models to bundle\"\nfi\n# Copy GLM-ASR models\nif [ -d \"${MODELS_SRC}/GLM-ASR/GLMASRWhisperEncoder.mlmodelc\" ]; then\n  rsync -a \"${MODELS_SRC}/GLM-ASR/\" \"${MODELS_DST}/GLM-ASR/\"\n  echo \"Copied GLM-ASR models to bundle\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
