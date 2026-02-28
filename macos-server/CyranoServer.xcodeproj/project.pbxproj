@@ -1,0 +1,392 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0011C80B8021746D4CD28995 /* ServerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCFA5869C3A2763EFF594BF /* ServerConfig.swift */; };
+		20CB198724AE1A50DE755564 /* CyranoMCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1BDCCCE251B6699523A728 /* CyranoMCService.swift */; };
+		38DF12040E6375B206CE6C31 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 89093F1B2682FCD980F064C4 /* Logging */; };
+		7ECEFE25C31F11C897239D65 /* ClaudeRelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000B640CB5FDD73517E0821D /* ClaudeRelayService.swift */; };
+		BDBB32979C12E9000F419027 /* ServerStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D9713FA891FD242E6D6507 /* ServerStatusView.swift */; };
+		DDB49BD54AB7E39CF2944BB8 /* CyranoServerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759A9F69DCAA3EEC7D6CFF0 /* CyranoServerApp.swift */; };
+		E6A469B20D67FB5C1101D17B /* MessageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656FF47C46EDBA314D982E6 /* MessageRouter.swift */; };
+		F2F366AB6C40FF0FE81091ED /* CyranoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F32DDAA2AA5F1156EBB73DC /* CyranoMessage.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		000B640CB5FDD73517E0821D /* ClaudeRelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeRelayService.swift; sourceTree = "<group>"; };
+		2F32DDAA2AA5F1156EBB73DC /* CyranoMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoMessage.swift; sourceTree = "<group>"; };
+		5D1BDCCCE251B6699523A728 /* CyranoMCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoMCService.swift; sourceTree = "<group>"; };
+		6A80241489F7BEEF839F89F7 /* CyranoServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyranoServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8656FF47C46EDBA314D982E6 /* MessageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRouter.swift; sourceTree = "<group>"; };
+		9759A9F69DCAA3EEC7D6CFF0 /* CyranoServerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyranoServerApp.swift; sourceTree = "<group>"; };
+		DCCFA5869C3A2763EFF594BF /* ServerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfig.swift; sourceTree = "<group>"; };
+		F4D9713FA891FD242E6D6507 /* ServerStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F91753AE69B8E6D17EFF5C3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38DF12040E6375B206CE6C31 /* Logging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		072FBF419BC2459AE315C51D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6A80241489F7BEEF839F89F7 /* CyranoServer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		61166764A3A30CB69C090CC5 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				2F32DDAA2AA5F1156EBB73DC /* CyranoMessage.swift */,
+				8656FF47C46EDBA314D982E6 /* MessageRouter.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		7DD31F973D233B624C2E78A2 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				9759A9F69DCAA3EEC7D6CFF0 /* CyranoServerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		861FCCFFD767DF11DD12A7BC = {
+			isa = PBXGroup;
+			children = (
+				AFA70EC07698845867106DA0 /* Sources */,
+				072FBF419BC2459AE315C51D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8F00A4409E00D7EE8E4735D5 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				DCCFA5869C3A2763EFF594BF /* ServerConfig.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		91B3F9694938D54CF0C8932C /* Connectivity */ = {
+			isa = PBXGroup;
+			children = (
+				5D1BDCCCE251B6699523A728 /* CyranoMCService.swift */,
+			);
+			path = Connectivity;
+			sourceTree = "<group>";
+		};
+		AFA70EC07698845867106DA0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7DD31F973D233B624C2E78A2 /* App */,
+				8F00A4409E00D7EE8E4735D5 /* Configuration */,
+				91B3F9694938D54CF0C8932C /* Connectivity */,
+				DB99A5BA973F92D9F82D66E6 /* LLM */,
+				61166764A3A30CB69C090CC5 /* Protocol */,
+				D83C9485BE88FC8F533DFF24 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D83C9485BE88FC8F533DFF24 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4D9713FA891FD242E6D6507 /* ServerStatusView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DB99A5BA973F92D9F82D66E6 /* LLM */ = {
+			isa = PBXGroup;
+			children = (
+				000B640CB5FDD73517E0821D /* ClaudeRelayService.swift */,
+			);
+			path = LLM;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6F5E36F71FAA43830E8A30A5 /* CyranoServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A5DED1F80BE0DD7E03A7896 /* Build configuration list for PBXNativeTarget "CyranoServer" */;
+			buildPhases = (
+				25735AB6B4A1F38C6BA45949 /* Sources */,
+				F91753AE69B8E6D17EFF5C3A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CyranoServer;
+			packageProductDependencies = (
+				89093F1B2682FCD980F064C4 /* Logging */,
+			);
+			productName = CyranoServer;
+			productReference = 6A80241489F7BEEF839F89F7 /* CyranoServer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5A6114D22F4D0E6120EB5D4B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 58B17E6E4E47F956A4BC0626 /* Build configuration list for PBXProject "CyranoServer" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 861FCCFFD767DF11DD12A7BC;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DE929590AEA55F27BCB4CD7C /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6F5E36F71FAA43830E8A30A5 /* CyranoServer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		25735AB6B4A1F38C6BA45949 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7ECEFE25C31F11C897239D65 /* ClaudeRelayService.swift in Sources */,
+				20CB198724AE1A50DE755564 /* CyranoMCService.swift in Sources */,
+				F2F366AB6C40FF0FE81091ED /* CyranoMessage.swift in Sources */,
+				DDB49BD54AB7E39CF2944BB8 /* CyranoServerApp.swift in Sources */,
+				E6A469B20D67FB5C1101D17B /* MessageRouter.swift in Sources */,
+				0011C80B8021746D4CD28995 /* ServerConfig.swift in Sources */,
+				BDBB32979C12E9000F419027 /* ServerStatusView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		60C97E1931FDD3673252413E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		7E57D921ED1601247831483B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E0740808AF9BC714F5FD178A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.server;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E2B87983BF89EC6E52F9A861 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyrano.server;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A5DED1F80BE0DD7E03A7896 /* Build configuration list for PBXNativeTarget "CyranoServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2B87983BF89EC6E52F9A861 /* Debug */,
+				E0740808AF9BC714F5FD178A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		58B17E6E4E47F956A4BC0626 /* Build configuration list for PBXProject "CyranoServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60C97E1931FDD3673252413E /* Debug */,
+				7E57D921ED1601247831483B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DE929590AEA55F27BCB4CD7C /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		89093F1B2682FCD980F064C4 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE929590AEA55F27BCB4CD7C /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5A6114D22F4D0E6120EB5D4B /* Project object */;
+}
