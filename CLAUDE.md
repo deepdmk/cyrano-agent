@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git Workflow
+
+**Do not push to remote without explicit user permission.** Commits can be made locally, but always wait for the user to approve before running `git push`.
+
 ## Project Overview
 
 Cyrano Agent is a conversational AI system that captures agricultural data through natural dialogue with smallholder farmers. The farmer never sees forms or databases—data capture happens invisibly through conversation.
