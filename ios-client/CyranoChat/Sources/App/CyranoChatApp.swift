@@ -5,10 +5,13 @@ import SwiftUI
 @main
 struct CyranoChatApp: App {
     init() {
-        // Eagerly initialize model managers so they copy bundled models
+        // Eagerly initialize model managers and copy bundled models
         // to Documents on first launch
-        _ = GLMASRModelManager.shared
+        let glmManager = GLMASRModelManager.shared
         _ = OnDeviceLLMModelManager.shared
+        Task {
+            await glmManager.installFromBundleIfNeeded()
+        }
     }
 
     var body: some Scene {

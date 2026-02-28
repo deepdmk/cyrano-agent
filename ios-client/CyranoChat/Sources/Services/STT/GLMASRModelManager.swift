@@ -198,14 +198,14 @@ public actor GLMASRModelManager {
     // MARK: - Initialization
 
     public init() {
-        Task { [weak self] in
-            guard let self else { return }
-            await self.installFromBundleIfNeeded()
-        }
+        // Initialization is synchronous; model setup runs asynchronously after init completes.
+        // The shared singleton is used in the detached task to avoid capturing `self` before
+        // the actor is fully initialized (which would violate Swift 6 concurrency rules).
     }
 
-    /// Proactively copy models from bundle if not yet in Documents
-    private func installFromBundleIfNeeded() async {
+    /// Call after init to proactively copy models from bundle if not yet in Documents.
+    /// This is called from CyranoChatApp.init() via `Task { await manager.installFromBundleIfNeeded() }`.
+    public func installFromBundleIfNeeded() async {
         checkModelAvailability()
         if !isModelAvailable() && !areCoreMLModelsAvailable() {
             try? await downloadModels()
