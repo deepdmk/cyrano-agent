@@ -8,3 +8,6 @@ pydantic
 sentence-transformers
 fastapi
 uvicorn[standard]
+opentelemetry-api
+opentelemetry-sdk
+openinference-instrumentation-agno
