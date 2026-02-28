@@ -45,11 +45,28 @@ cp .env.example .env
 python -m db.init_db
 ```
 
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ANTHROPIC_API_KEY` | Yes | Anthropic API key for Claude |
+| `DATA_DIR` | No | Override default data directory (default: `data/`) |
+| `LOG_PROMPTS` | No | Set to `1` to log full prompts sent to Cyrano |
+
 ## Running
 
-Start the main conversation loop:
 ```bash
-python -m main
+# CLI conversation
+python -m main [user_id] [session_id]
+
+# Web API server (for web/mobile clients, port 8080)
+python run_server.py [--port 8080] [--host 0.0.0.0]
+
+# AgentOS monitoring dashboard (port 7777)
+python -m server
+
+# Health check (diagnostics)
+python -m health_check
 ```
 
 ## Testing Individual Agents
@@ -78,6 +95,9 @@ agno-server/
 │   ├── data_agent.py
 │   ├── mood_agent.py
 │   └── orchestrator.py
+├── api/              # Web API server
+│   ├── server.py     # FastAPI routes with SSE streaming
+│   └── session_manager.py
 ├── db/               # Database configuration and models
 │   ├── connection.py
 │   ├── models.py
@@ -87,7 +107,10 @@ agno-server/
 │   ├── form_db_tools.py
 │   └── questions_tools.py
 ├── config/           # Configuration settings
-│   └── settings.py
-├── scripts/          # Test and validation scripts
-└── main.py           # Entry point
+│   ├── settings.py
+│   └── logging_config.py
+├── main.py           # CLI entry point
+├── server.py         # AgentOS monitoring dashboard
+├── run_server.py     # Web API server entry point
+└── health_check.py   # Diagnostic tool
 ```

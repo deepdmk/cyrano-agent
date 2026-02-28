@@ -31,13 +31,20 @@ pip install -r requirements.txt
 cp .env.example .env  # Add ANTHROPIC_API_KEY
 python -m db.init_db
 
-# Run conversation
+# Run conversation (CLI)
 python -m main [user_id] [session_id]
+
+# Run web API server (for web/mobile clients)
+python run_server.py [--port 8080] [--host 0.0.0.0]
+# Exposes /chat endpoint with SSE streaming
 
 # Run AgentOS server (monitoring dashboard)
 python -m server
 # Then open http://localhost:7777 for the dashboard
 # API docs at http://localhost:7777/docs
+
+# Health check (diagnostics)
+python -m health_check
 
 # Test individual agents
 python -m agents.talk_agent [user_id] [session_id]
@@ -50,7 +57,10 @@ python -m agents.mood_agent <session_id> <user_id>
 
 | Path | Purpose |
 |------|---------|
-| `agno-server/server.py` | AgentOS server for monitoring dashboard |
+| `agno-server/server.py` | AgentOS server for monitoring dashboard (port 7777) |
+| `agno-server/run_server.py` | Web API server with SSE streaming (port 8080) |
+| `agno-server/api/server.py` | FastAPI routes for web/mobile clients |
+| `agno-server/health_check.py` | Diagnostic tool for config, deps, agents |
 | `agno-server/agents/orchestrator.py` | Main entry point, ties agents together |
 | `agno-server/agents/talk_agent.py` | Cyrano personality and conversation |
 | `agno-server/tools/questions_tools.py` | LanceDB vector search for gap questions |
@@ -59,6 +69,14 @@ python -m agents.mood_agent <session_id> <user_id>
 | `agno-server/config/logging_config.py` | Centralized logging configuration |
 | `_ref/talk-agent-personality.md` | Cyrano's complete behavioral specification |
 | `_ref/design-decisions.md` | DD-01 through DD-09 architectural decisions |
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ANTHROPIC_API_KEY` | Yes | Anthropic API key for Claude |
+| `DATA_DIR` | No | Override default data directory (default: `agno-server/data`) |
+| `LOG_PROMPTS` | No | Set to `1` to log full prompts sent to Cyrano |
 
 ## External Services
 
@@ -91,11 +109,6 @@ Logs go to both the console and `data/cyrano.log`. The log file persists across 
 Log format: `timestamp | level | module | message`
 
 To view logs in real time: `tail -f data/cyrano.log`
-
-To log the full prompt sent to Cyrano (useful for debugging):
-```bash
-LOG_PROMPTS=1 python -m main [user_id] [session_id]
-```
 
 ## Critical Design Decisions
 
