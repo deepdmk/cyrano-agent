@@ -9,6 +9,7 @@ This document contains phased instructions for Claude Code to build the Farmer C
 
 - `_ref/system-architecture.md` -- system design
 - `_ref/database-schemas.md` -- all table schemas
+- `_ref/design-decisions.md` -- specific implementation decisions (DD-01 through DD-08)
 - `_ref/agno-farmer-concept.md` -- project concept note
 - `_ref/agno-farmer-agent-briefing.md` -- research and decisions from prior sessions
 
@@ -22,6 +23,7 @@ Always point Claude Code to the reference documents before giving it a phase. Ex
 > Read the following reference documents first:
 > - `_ref/system-architecture.md`
 > - `_ref/database-schemas.md`
+> - `_ref/design-decisions.md`
 > - `.claude/skills/agno/SKILL.md` (and relevant reference files in `.claude/skills/agno/references/`)
 > Use Context7 to verify any Agno API patterns you're unsure about.
 > Then proceed with Phase X below.

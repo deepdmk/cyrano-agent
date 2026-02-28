@@ -1,0 +1,9 @@
+agno
+anthropic
+psycopg[binary]
+psycopg2-binary
+sqlalchemy
+pgvector
+python-dotenv
+pydantic
+sentence-transformers

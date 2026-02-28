@@ -195,17 +195,21 @@ Three databases for the prototype:
 
 ---
 
-## Open Design Questions
+## Design Decisions (Resolved)
 
-1. **Mood Agent prompt injection mechanism:** How does the Mood Agent modify the Talk Agent's prompt in real time within Agno? Options include shared session state, a custom tool, or a middleware layer. Needs prototyping.
+All design decisions are documented in detail in `_ref/design-decisions.md`. Summary:
 
-2. **Background trigger mechanism:** Post-hooks after each Talk Agent turn vs. short polling interval vs. continuous workflow. Post-hooks are cleanest in Agno but need to be tested for reliability.
+1. **Mood Agent prompt injection (DD-01):** Prepend instruction to user message as a system note. No agent reconfiguration needed.
+2. **Background trigger mechanism (DD-02):** Agno post-hook (`@hook(run_in_background=True)`) as primary. Asyncio tasks as fallback.
+3. **Questions Vector DB clearing (DD-03):** Explicit clearing in the orchestrator during session creation. Not via hooks.
+4. **Background agent sequencing (DD-04):** Sequential -- Extract Agent, then Data Agent, then Mood Agent. No parallelism in prototype.
+5. **Session management (DD-05):** Every system start creates a new session. No session resumption. User_id persists across sessions.
+6. **Mood Agent memory (DD-06):** Persistent memory via `update_memory_on_run=True`, separate from Talk Agent session.
+7. **Form Databases (DD-07):** Prototype stand-ins, designed to be swappable. Tool functions abstract the schemas.
+8. **Embedding strategy (DD-08):** 768-dim embedder, shared utility function for write and search consistency.
 
-3. **Main DB record schema:** Defined separately (see schema document).
-
-4. **Form Database schemas:** Defined separately (see schema document).
-
-5. **Questions Vector DB clearing mechanism:** How and when exactly is the vector DB cleared between sessions? On session creation? Via a pre-hook on the Talk Agent?
+Schemas are defined in `_ref/database-schemas.md`.
+Implementation instructions are in `_ref/claude-code-instructions.md`.
 
 ---
 
