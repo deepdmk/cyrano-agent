@@ -10,6 +10,8 @@ Implements the system flow:
 6. Store mood instruction for next turn
 """
 import asyncio
+import json
+import os
 import uuid
 from dataclasses import dataclass, field
 from typing import Iterator, Optional
@@ -23,6 +25,9 @@ from tools.questions_tools import clear_session_questions
 from config.logging_config import get_logger
 
 logger = get_logger("orchestrator")
+
+# Environment variable to enable full prompt logging
+LOG_PROMPTS = os.environ.get("LOG_PROMPTS", "").lower() in ("1", "true", "yes")
 
 
 @dataclass
@@ -139,6 +144,14 @@ class Orchestrator:
         response = agent.run(message_to_send)
         response_text = response.content
         logger.debug("Turn %d: Cyrano response (%d chars)", self.state.turn_count, len(response_text))
+
+        # Log full prompt/messages if enabled
+        if LOG_PROMPTS and response.messages:
+            logger.info("=== FULL PROMPT FOR TURN %d ===", self.state.turn_count)
+            for i, msg in enumerate(response.messages):
+                msg_dict = msg.model_dump() if hasattr(msg, 'model_dump') else msg
+                logger.info("Message %d:\n%s", i, json.dumps(msg_dict, indent=2, default=str))
+            logger.info("=== END PROMPT ===")
 
         # Record assistant response in history
         self.state.conversation_history.append({
