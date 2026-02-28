@@ -6,3 +6,5 @@ pyarrow
 python-dotenv
 pydantic
 sentence-transformers
+fastapi
+uvicorn[standard]

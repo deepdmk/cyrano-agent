@@ -1,21 +1,34 @@
 import { useCallback, useRef } from 'react';
 import { useChatState, useChatDispatch } from './ChatContext';
 import { ClaudeAPIService } from '../services/llm/ClaudeAPIService';
+import { CyranoServerService } from '../services/llm/CyranoServerService';
 import { StorageService } from '../services/storage/StorageService';
 import { createMessage } from '../models/ChatMessage';
+import type { LLMService } from '../services/interfaces/LLMService';
 import type { LLMMessage } from '../models/LLMTypes';
 
 export function useChatActions() {
   const state = useChatState();
   const dispatch = useChatDispatch();
-  const llmServiceRef = useRef<ClaudeAPIService | null>(null);
+  const llmServiceRef = useRef<LLMService | null>(null);
 
   // Ensure LLM service is initialized
-  const getLLMService = useCallback((): ClaudeAPIService | null => {
+  const getLLMService = useCallback((): LLMService | null => {
+    const serverUrl = StorageService.getCyranoServerUrl();
+
+    if (serverUrl) {
+      // Use Cyrano agno-server
+      if (!llmServiceRef.current || !(llmServiceRef.current instanceof CyranoServerService)) {
+        llmServiceRef.current = new CyranoServerService(serverUrl);
+      }
+      return llmServiceRef.current;
+    }
+
+    // Fall back to direct Anthropic API
     const apiKey = StorageService.getAPIKey();
     if (!apiKey) return null;
 
-    if (!llmServiceRef.current) {
+    if (!llmServiceRef.current || !(llmServiceRef.current instanceof ClaudeAPIService)) {
       llmServiceRef.current = new ClaudeAPIService(apiKey);
     }
     return llmServiceRef.current;
@@ -27,7 +40,7 @@ export function useChatActions() {
 
     const llm = getLLMService();
     if (!llm) {
-      dispatch({ type: 'SET_ERROR', message: 'Please set your API key in Settings.' });
+      dispatch({ type: 'SET_ERROR', message: 'Please set a Cyrano Server URL or API key in Settings.' });
       return;
     }
 
@@ -111,6 +124,16 @@ export function useChatActions() {
     dispatch({ type: 'SET_SYSTEM_PROMPT', prompt });
   }, [dispatch]);
 
+  const saveCyranoServerUrl = useCallback((url: string) => {
+    StorageService.setCyranoServerUrl(url);
+    llmServiceRef.current = null; // Force re-creation on next getLLMService()
+  }, []);
+
+  const removeCyranoServerUrl = useCallback(() => {
+    StorageService.removeCyranoServerUrl();
+    llmServiceRef.current = null;
+  }, []);
+
   return {
     sendMessage,
     clearConversation,
@@ -118,5 +141,7 @@ export function useChatActions() {
     removeAPIKey,
     setModel,
     setSystemPrompt,
+    saveCyranoServerUrl,
+    removeCyranoServerUrl,
   };
 }

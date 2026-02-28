@@ -12,7 +12,7 @@ Implements the system flow:
 import asyncio
 import uuid
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Iterator, Optional
 from concurrent.futures import ThreadPoolExecutor
 
 from agents.talk_agent import create_talk_agent
@@ -140,6 +140,45 @@ class Orchestrator:
         self._schedule_background_processing()
 
         return response_text
+
+    def process_message_stream(self, user_message: str) -> Iterator[str]:
+        """
+        Process a user message and yield response content deltas.
+
+        Same as process_message but yields content chunks as they arrive
+        from the underlying model, enabling SSE streaming to the client.
+        """
+        self.state.turn_count += 1
+
+        # Record user message in history (without mood instruction)
+        self.state.conversation_history.append({
+            "role": "user",
+            "content": user_message
+        })
+
+        # DD-01: Prepend mood instruction to user message if present
+        message_to_send = user_message
+        if self.state.mood_instruction:
+            message_to_send = f"[System guidance: {self.state.mood_instruction}]\n\n{user_message}"
+
+        agent = self._get_talk_agent()
+
+        # Stream response using Agno's streaming mode
+        full_response = ""
+        for event in agent.run(message_to_send, stream=True):
+            if event.event == "RunContent" and event.content:
+                chunk = str(event.content)
+                full_response += chunk
+                yield chunk
+
+        # Record full response in history
+        self.state.conversation_history.append({
+            "role": "assistant",
+            "content": full_response
+        })
+
+        # Schedule background processing (non-blocking)
+        self._schedule_background_processing()
 
     def _schedule_background_processing(self):
         """Schedule background agents to run after the conversation turn."""

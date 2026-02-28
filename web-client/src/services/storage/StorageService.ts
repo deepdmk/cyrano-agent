@@ -5,6 +5,7 @@ const KEYS = {
   model: 'cyrano:model',
   systemPrompt: 'cyrano:system-prompt',
   voiceServerUrl: 'cyrano:voice-server-url',
+  cyranoServerUrl: 'cyrano:server-url',
 } as const;
 
 export const StorageService = {
@@ -50,5 +51,22 @@ export const StorageService = {
 
   setVoiceServerUrl(url: string): void {
     localStorage.setItem(KEYS.voiceServerUrl, url);
+  },
+
+  // Cyrano Server URL
+  getCyranoServerUrl(): string | null {
+    return localStorage.getItem(KEYS.cyranoServerUrl);
+  },
+
+  setCyranoServerUrl(url: string): void {
+    localStorage.setItem(KEYS.cyranoServerUrl, url);
+  },
+
+  removeCyranoServerUrl(): void {
+    localStorage.removeItem(KEYS.cyranoServerUrl);
+  },
+
+  hasCyranoServerUrl(): boolean {
+    return localStorage.getItem(KEYS.cyranoServerUrl) !== null;
   },
 };
