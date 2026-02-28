@@ -149,41 +149,251 @@ Three databases for the prototype:
 
 ## System Flow
 
+### High-Level Architecture
+
 ```
-1. Farmer speaks (text input for PoC, voice later)
-         |
-         v
-2. Talk Agent holds natural conversation
-   - Reads from Questions Vector DB for relevant prompts
-   - Receives Mood Agent instructions via prompt injection
-   - Writes everything to Sessions Table
-         |
-         v
-3. Sessions Table (permanent conversation record)
-         |
-         +-------> Extract Agent (async, background)
-         |              |
-         |              v
-         |         Main DB (permanent structured extractions)
-         |              |
-         |              v
-         |         Data Agent (async, background)
-         |              |
-         |              +---> Agricultural Data DB
-         |              +---> Scheduling DB
-         |              +---> Planning DB
-         |              |
-         |              +---> Questions Vector DB (illusory)
-         |                         |
-         |                         v
-         |              Talk Agent reads questions into conversation
-         |
-         +-------> Mood Agent (async, parallel)
-                        |
-                        v
-                   Monitors engagement, fatigue, anger
-                   Injects instructions into Talk Agent prompt
-                   Maintains own persistent memory
+┌─────────────────────────────────────────────────────────────────────┐
+│                        FRONT OF HOUSE                               │
+│                                                                     │
+│   Farmer  ──text──>  ORCHESTRATOR  ──text──>  Farmer                │
+│                          │    ▲                                     │
+│                          │    │                                     │
+│                          ▼    │                                     │
+│                       ┌──────────┐                                  │
+│                       │  CYRANO  │◄─── Questions Vector DB          │
+│                       │  (Talk   │     (illusory -- cleared         │
+│                       │  Agent)  │      each session)               │
+│                       └────┬─────┘                                  │
+│                            │                                        │
+│                            ▼                                        │
+│                     Sessions Table                                  │
+│                     (permanent)                                     │
+│                                                                     │
+├─ ── ── ── ── ── ── ── ── ─┼── ── ── ── ── ── ── ── ── ── ── ── ──┤
+│                            │                                        │
+│                     BACKGROUND                                      │
+│                     (post-hook, async,                               │
+│                      does not block                                  │
+│                      conversation)                                  │
+│                            │                                        │
+│              ┌─────────────┼──────────────┐                         │
+│              │             │              │                          │
+│              ▼             │              ▼                          │
+│       ┌────────────┐       │       ┌────────────┐                   │
+│       │  EXTRACT   │       │       │    MOOD    │                   │
+│       │   AGENT    │       │       │   AGENT    │                   │
+│       └─────┬──────┘       │       └─────┬──────┘                   │
+│             │              │             │                          │
+│             ▼              │             ▼                          │
+│        ┌─────────┐         │       Mood Memory                     │
+│        │ MAIN DB │         │       (persistent)                    │
+│        │ (perm.) │         │             │                          │
+│        └────┬────┘         │             ▼                          │
+│             │              │       [System guidance]                │
+│             ▼              │       prepended to next                │
+│       ┌────────────┐       │       farmer message                  │
+│       │   DATA     │       │       (DD-01)                         │
+│       │   AGENT    │       │                                        │
+│       └──┬───┬───┬─┘       │                                        │
+│          │   │   │         │                                        │
+│          ▼   ▼   ▼         │                                        │
+│      ┌────┐┌────┐┌────┐    │                                        │
+│      │ Ag ││Sch.││Plan│    │                                        │
+│      │ DB ││ DB ││ DB │    │                                        │
+│      └────┘└────┘└────┘    │                                        │
+│      (Form Databases --    │                                        │
+│       swappable)           │                                        │
+│          │                 │                                        │
+│          ▼                 │                                        │
+│    Questions Vector DB ────┘                                        │
+│    (illusory)                                                       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Detailed Conversation Turn Cycle
+
+```
+TURN N:
+========
+
+  ┌─ Farmer sends message
+  │
+  ▼
+  Orchestrator receives message
+  │
+  ├── Has Mood instruction from Turn N-1?
+  │     YES: Prepend [System guidance: ...] to message (DD-01)
+  │     NO:  Pass message unchanged
+  │
+  ▼
+  Cyrano (Talk Agent) receives message
+  │
+  ├── Reads conversation history from Sessions Table
+  ├── Every 3-4 turns: searches Questions Vector DB
+  │     └── Vector similarity against current conversation
+  │         └── Returns top questions that fit naturally
+  ├── Generates response
+  │     └── Natural, conversational, no advice, no praise
+  │         └── May weave in a question from the queue
+  │
+  ▼
+  Response returned to farmer
+  │
+  ▼
+  Post-hook fires (background, non-blocking)  ──────────────────┐
+  │                                                              │
+  │  STEP 1: Extract Agent                                      │
+  │  ├── Reads Sessions Table (shared session_id)               │
+  │  ├── Identifies new agricultural facts                      │
+  │  ├── Writes structured records to Main DB                   │
+  │  └── Each record: raw_text, extracted_fact, domain,         │
+  │       confidence, verification_status                       │
+  │                                                              │
+  │  STEP 2: Data Agent                                         │
+  │  ├── Reads unrouted facts from Main DB                      │
+  │  ├── Routes each fact to correct Form Database table        │
+  │  │     ├── Agricultural DB (fields, crops, inputs,          │
+  │  │     │    yields, weather)                                │
+  │  │     ├── Scheduling DB (events)                           │
+  │  │     └── Planning DB (plans)                              │
+  │  ├── Marks each fact as routed                              │
+  │  ├── Scans Form DBs for gaps (NULL fields, missing data)    │
+  │  ├── Generates natural questions for each gap               │
+  │  └── Writes questions to Questions Vector DB                │
+  │       └── Available for Cyrano on next turn                 │
+  │                                                              │
+  │  STEP 3: Mood Agent                                         │
+  │  ├── Reads Sessions Table                                   │
+  │  ├── Assesses: fatigue, anger, disengagement,               │
+  │  │    confusion, frustration                                │
+  │  ├── Updates its own persistent memory                      │
+  │  │    (learns this farmer's patterns over time)             │
+  │  └── Outputs action:                                        │
+  │       ├── CONTINUE      -> no instruction stored            │
+  │       ├── ADJUST_TONE   -> instruction stored for Turn N+1  │
+  │       ├── CHANGE_TOPIC  -> instruction stored for Turn N+1  │
+  │       ├── WRAP_UP       -> instruction stored for Turn N+1  │
+  │       └── END_NOW       -> instruction stored for Turn N+1  │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+
+  Farmer sends next message... (Turn N+1)
+```
+
+### Session Lifecycle
+
+```
+SESSION START (every system start = new session)
+================================================
+
+  1. Orchestrator generates new session_id
+  2. user_id persists (same farmer)
+  3. Clear Questions Vector DB (DD-03)
+  4. Create Cyrano (Talk Agent) -- reused for entire session (DD-02)
+  5. Check: new farmer or returning?
+       │
+       ├── NEW (no facts in Main DB for this user_id):
+       │     Cyrano: "Hey, I'm Cyrano. I'm here to chat about
+       │              what's going on with your farm whenever
+       │              you've got a few minutes. No agenda, just
+       │              conversation. What are you working on
+       │              these days?"
+       │
+       └── RETURNING (facts exist in Main DB):
+             Cyrano: "Good to talk again. Last time you mentioned
+                      [references something from previous sessions]
+                      -- how's that coming along?"
+
+  6. Enter conversation turn cycle
+  7. Background agents run after each turn (DD-02, DD-04)
+  8. Session ends when farmer exits or Mood Agent triggers END_NOW
+
+
+SESSION END
+===========
+
+  1. Wait for background tasks to complete
+  2. Sessions Table retained (permanent)
+  3. Main DB retained (permanent)
+  4. Form Databases retained (permanent)
+  5. Mood Agent memory retained (permanent)
+  6. Questions Vector DB will be cleared on next session start
+
+
+WHAT PERSISTS ACROSS SESSIONS:
+==============================
+
+  ┌──────────────────────┬────────────┐
+  │ Data Store           │ Persists?  │
+  ├──────────────────────┼────────────┤
+  │ Sessions Table       │ Yes        │
+  │ Main DB              │ Yes        │
+  │ Agricultural Data DB │ Yes        │
+  │ Scheduling DB        │ Yes        │
+  │ Planning DB          │ Yes        │
+  │ Mood Agent Memory    │ Yes        │
+  │ Questions Vector DB  │ No (reset) │
+  └──────────────────────┴────────────┘
+```
+
+### Data Flow: From Conversation to Database
+
+```
+EXAMPLE: Farmer says "I planted two hectares of maize in the north field last Tuesday"
+
+  Farmer's words
+       │
+       ▼
+  Cyrano responds naturally
+  ("Two hectares of maize, that's a solid planting.
+   How's the soil up in the north field?")
+       │
+       ▼
+  Sessions Table records the full exchange
+       │
+       ▼
+  Extract Agent processes the session
+       │
+       ├── Fact 1: {crop_type: "maize", action: "planted",
+       │            field: "north field", date: "last Tuesday"}
+       │            domain: ["agricultural"]
+       │            confidence: "high"
+       │
+       ├── Fact 2: {field: "north field", size: "two hectares"}
+       │            domain: ["agricultural"]
+       │            confidence: "high"
+       │
+       ▼
+  Main DB now has 2 new records (permanent)
+       │
+       ▼
+  Data Agent reads unrouted facts
+       │
+       ├── Routes Fact 1 to:
+       │     crops table: {crop_type: "maize", field_id: <north_field>,
+       │                   planting_date: <resolved_date>, status: "planted"}
+       │
+       ├── Routes Fact 2 to:
+       │     fields table: UPDATE north_field SET size_hectares = 2.0
+       │
+       ├── Scans for gaps:
+       │     crops: variety = NULL, expected_harvest_date = NULL,
+       │            seed_source = NULL
+       │     fields: soil_type = NULL, irrigation_method = NULL
+       │
+       ├── Generates questions:
+       │     "What variety of maize did you go with?"        (high)
+       │     "When are you expecting to harvest the maize?"  (medium)
+       │     "What's the soil like up in the north field?"   (medium)
+       │
+       ▼
+  Questions Vector DB now has 3 questions
+       │
+       ▼
+  Next turn: Cyrano searches Questions Vector DB
+  and naturally asks about the maize variety or soil type
+  when the moment fits
 ```
 
 ---
@@ -192,10 +402,12 @@ Three databases for the prototype:
 
 - **Framework:** Agno (Python, `pip install agno`)
 - **LLM Provider:** Anthropic (Claude) for all agents
-- **Database:** PostgreSQL + PgVector
+- **Relational Database:** SQLite (file-based, no server) for Main DB + Form Databases + Agno sessions
+- **Vector Database:** LanceDB (embedded, file-based) for Questions Vector DB
 - **Runtime:** AgentOS (FastAPI)
 - **Voice:** Deferred (text input/output for PoC)
 - **iOS Client:** Deferred (server-side only for PoC)
+- **Infrastructure:** Zero external dependencies. No Docker, no database server. All data in local `data/` directory.
 
 ---
 

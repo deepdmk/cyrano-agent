@@ -132,3 +132,80 @@ def get_facts_by_session(session_id: str) -> list[dict]:
             }
             for fact in results
         ]
+
+
+def get_recent_fact_for_user(user_id: str) -> Optional[dict]:
+    """
+    Get a recent fact for a user to use in returning conversation opening.
+
+    Returns None if no facts exist (new farmer).
+
+    Note: Since ExtractedFact doesn't track user_id directly, this queries
+    Agno's session table to find sessions belonging to this user, then
+    retrieves facts from those sessions.
+
+    Args:
+        user_id: The user identifier to look up facts for
+
+    Returns:
+        A single recent fact dict, or None if this is a new user
+    """
+    from sqlalchemy import text
+
+    with SessionLocal() as db:
+        # Query Agno's sessions table to find session IDs for this user
+        # Agno stores sessions in 'agno_sessions' table with user_id column
+        try:
+            sessions_query = text("""
+                SELECT session_id
+                FROM agno_sessions
+                WHERE user_id = :user_id
+                ORDER BY created_at DESC
+                LIMIT 10
+            """)
+            session_result = db.execute(sessions_query, {"user_id": user_id})
+            session_ids = [row[0] for row in session_result.fetchall()]
+
+            if not session_ids:
+                return None
+
+            # Get the most recent fact from these sessions
+            stmt = (
+                select(ExtractedFact)
+                .where(ExtractedFact.session_id.in_(session_ids))
+                .order_by(ExtractedFact.timestamp.desc())
+                .limit(1)
+            )
+            result = db.execute(stmt).scalar_one_or_none()
+
+            if result:
+                return {
+                    "id": str(result.id),
+                    "raw_text": result.raw_text,
+                    "extracted_fact": result.extracted_fact,
+                    "domain": result.domain,
+                    "confidence": result.confidence,
+                    "timestamp": result.timestamp.isoformat() if result.timestamp else None
+                }
+            return None
+
+        except Exception:
+            # If Agno sessions table doesn't exist or query fails,
+            # fall back to checking any recent facts (prototype behavior)
+            stmt = (
+                select(ExtractedFact)
+                .order_by(ExtractedFact.timestamp.desc())
+                .limit(1)
+            )
+            result = db.execute(stmt).scalar_one_or_none()
+
+            if result:
+                return {
+                    "id": str(result.id),
+                    "raw_text": result.raw_text,
+                    "extracted_fact": result.extracted_fact,
+                    "domain": result.domain,
+                    "confidence": result.confidence,
+                    "timestamp": result.timestamp.isoformat() if result.timestamp else None
+                }
+            return None

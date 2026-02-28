@@ -3,8 +3,8 @@ Orchestrator - Ties all agents together into the main conversation loop.
 
 Implements the system flow:
 1. Accept user input
-2. Inject any Mood Agent instruction
-3. Run Talk Agent
+2. Inject any Mood Agent instruction (prepended to user message per DD-01)
+3. Run Cyrano (Talk Agent)
 4. Return response to user
 5. Fire async background tasks (Extract -> Data -> Mood)
 6. Store mood instruction for next turn
@@ -39,9 +39,9 @@ class Orchestrator:
 
     The orchestrator manages:
     - Session lifecycle
-    - Talk Agent interactions
+    - Cyrano (Talk Agent) interactions
     - Background processing (Extract, Data, Mood agents)
-    - Mood instruction injection
+    - Mood instruction injection (prepended to user message per DD-01)
     """
 
     def __init__(self, user_id: str, session_id: Optional[str] = None):
@@ -71,50 +71,63 @@ class Orchestrator:
         """
         Initialize a new conversation session.
 
-        Clears the Questions Vector DB and prepares the Talk Agent.
+        Clears the Questions Vector DB and creates the Cyrano agent instance.
+        The agent is created once and reused throughout the session.
         """
         # Clear questions from previous session
         clear_session_questions(self.state.session_id)
+
+        # Create Cyrano agent once for the session
+        self._talk_agent = create_talk_agent(
+            session_id=self.state.session_id,
+            user_id=self.state.user_id
+        )
+
         print(f"Session started: {self.state.session_id}")
 
     def _get_talk_agent(self):
-        """Get or create the Talk Agent with current mood instruction."""
-        # Recreate agent if mood instruction changed
-        self._talk_agent = create_talk_agent(
-            session_id=self.state.session_id,
-            user_id=self.state.user_id,
-            mood_instruction=self.state.mood_instruction
-        )
+        """Get the Cyrano agent instance."""
+        if self._talk_agent is None:
+            self._talk_agent = create_talk_agent(
+                session_id=self.state.session_id,
+                user_id=self.state.user_id
+            )
         return self._talk_agent
 
     def process_message(self, user_message: str) -> str:
         """
-        Process a user message and return the agent's response.
+        Process a user message and return Cyrano's response.
 
         This is the main conversation turn method. It:
-        1. Runs the Talk Agent with the user's message
-        2. Schedules background processing
-        3. Returns the response
+        1. Prepends any mood instruction to the user message (DD-01)
+        2. Runs Cyrano with the message
+        3. Schedules background processing
+        4. Returns the response
 
         Args:
             user_message: The farmer's message
 
         Returns:
-            The Talk Agent's response
+            Cyrano's response
         """
         self.state.turn_count += 1
 
-        # Record user message in history
+        # Record user message in history (without mood instruction)
         self.state.conversation_history.append({
             "role": "user",
             "content": user_message
         })
 
-        # Get Talk Agent with current mood instruction
+        # DD-01: Prepend mood instruction to user message if present
+        message_to_send = user_message
+        if self.state.mood_instruction:
+            message_to_send = f"[System guidance: {self.state.mood_instruction}]\n\n{user_message}"
+
+        # Get Cyrano agent
         agent = self._get_talk_agent()
 
-        # Run the Talk Agent
-        response = agent.run(user_message)
+        # Run Cyrano
+        response = agent.run(message_to_send)
         response_text = response.content
 
         # Record assistant response in history
@@ -171,7 +184,7 @@ class Orchestrator:
 
         # Format conversation for mood agent
         conversation_text = "\n".join([
-            f"{'Farmer' if m['role'] == 'user' else 'Assistant'}: {m['content']}"
+            f"{'Farmer' if m['role'] == 'user' else 'Cyrano'}: {m['content']}"
             for m in recent_turns
         ])
 
@@ -237,11 +250,11 @@ def run_conversation_cli(user_id: str = "test_farmer", session_id: Optional[str]
     print("Type 'status' to see conversation summary.")
     print(f"{'='*60}\n")
 
-    # Initial greeting from the agent
+    # Initial greeting from Cyrano using opening protocol
     initial_response = orchestrator.process_message(
-        "The farmer just arrived. Greet them warmly and ask how they're doing."
+        "[New session started. Greet the farmer using your opening protocol.]"
     )
-    print(f"Assistant: {initial_response}\n")
+    print(f"Cyrano: {initial_response}\n")
 
     try:
         while True:
@@ -264,7 +277,7 @@ def run_conversation_cli(user_id: str = "test_farmer", session_id: Optional[str]
 
             # Process the message
             response = orchestrator.process_message(user_input)
-            print(f"\nAssistant: {response}\n")
+            print(f"\nCyrano: {response}\n")
 
     except KeyboardInterrupt:
         print("\n\nConversation interrupted.")
