@@ -11,6 +11,9 @@ from sqlalchemy.orm import Session
 
 from db.connection import SessionLocal
 from db.models import ExtractedFact
+from config.logging_config import get_logger
+
+logger = get_logger("tools.main_db")
 
 
 def write_extracted_fact(
@@ -33,6 +36,7 @@ def write_extracted_fact(
     Returns:
         The UUID of the created record
     """
+    logger.debug("Writing fact to session %s: domain=%s, confidence=%s", session_id, domain, confidence)
     with SessionLocal() as db:
         fact = ExtractedFact(
             session_id=session_id,

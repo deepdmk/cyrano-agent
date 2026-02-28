@@ -13,7 +13,10 @@ from agno.db.sqlite import SqliteDb
 from agno.tools.decorator import tool
 
 from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.logging_config import get_logger
 from tools.main_db_tools import write_extracted_fact, get_facts_by_session
+
+logger = get_logger("extract_agent")
 
 
 # System instructions for the Extract Agent
@@ -138,6 +141,8 @@ def run_extraction(session_id: str, conversation_history: list[dict] | None = No
     Returns:
         List of fact IDs that were created
     """
+    logger.debug("Running extraction for session %s", session_id)
+
     # Get facts that existed before this run
     existing_facts = get_facts_by_session(session_id)
     existing_ids = {f["id"] for f in existing_facts}
@@ -169,13 +174,18 @@ Look for:
 
 Extract each distinct piece of information separately. Be thorough but do not duplicate information that has already been extracted."""
 
-    agent.run(extraction_prompt)
+    try:
+        agent.run(extraction_prompt)
 
-    # Get facts after this run
-    new_facts = get_facts_by_session(session_id)
-    new_ids = [f["id"] for f in new_facts if f["id"] not in existing_ids]
+        # Get facts after this run
+        new_facts = get_facts_by_session(session_id)
+        new_ids = [f["id"] for f in new_facts if f["id"] not in existing_ids]
 
-    return new_ids
+        logger.info("Extracted %d facts from session %s", len(new_ids), session_id)
+        return new_ids
+    except Exception as e:
+        logger.error("Extraction failed for session %s: %s", session_id, e, exc_info=True)
+        raise
 
 
 def print_extraction_results(session_id: str, fact_ids: list[str]):

@@ -15,8 +15,11 @@ from agno.db.sqlite import SqliteDb
 from agno.tools.decorator import tool
 
 from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.logging_config import get_logger
 from tools.questions_tools import generate_embedding, search_questions
 from tools.main_db_tools import get_recent_fact_for_user
+
+logger = get_logger("talk_agent")
 
 
 # Full personality instructions for Cyrano
@@ -166,6 +169,7 @@ def create_talk_agent(
         markdown=False,  # Keep responses plain for farmer interface
     )
 
+    logger.debug("Talk agent created for session %s, user %s", session_id, user_id)
     return agent
 
 

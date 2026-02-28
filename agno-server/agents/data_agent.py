@@ -15,7 +15,10 @@ from agno.models.anthropic import Claude
 from agno.tools.decorator import tool
 
 from config.settings import DEFAULT_MODEL_ID
+from config.logging_config import get_logger
 from tools.main_db_tools import get_unrouted_facts, mark_fact_routed
+
+logger = get_logger("data_agent")
 from tools.form_db_tools import (
     # Fields
     create_field, update_field, get_all_fields, get_field, get_field_by_name,
@@ -195,9 +198,11 @@ def run_data_routing(session_id: str) -> dict:
     Returns:
         Summary dict with facts_routed and questions_generated counts
     """
+    logger.debug("Running data routing for session %s", session_id)
+
     # Clear existing questions for this session
     clear_result = clear_session_questions(session_id)
-    print(f"  {clear_result}")
+    logger.debug("%s", clear_result)
 
     # Get initial counts
     initial_unrouted = len(get_unrouted_facts())
@@ -227,11 +232,13 @@ Be thorough but efficient. Process all unrouted facts and identify the most impo
     final_unrouted = len(get_unrouted_facts())
     questions_count = get_question_count(session_id)
 
-    return {
+    results = {
         "facts_routed": initial_unrouted - final_unrouted,
         "facts_remaining": final_unrouted,
         "questions_generated": questions_count
     }
+    logger.info("Data routing complete: %d routed, %d questions", results['facts_routed'], results['questions_generated'])
+    return results
 
 
 def print_routing_results(results: dict, session_id: str):

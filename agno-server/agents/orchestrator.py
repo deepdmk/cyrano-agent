@@ -20,6 +20,9 @@ from agents.extract_agent import run_extraction
 from agents.data_agent import run_data_routing
 from agents.mood_agent import assess_mood, MoodAssessment
 from tools.questions_tools import clear_session_questions
+from config.logging_config import get_logger
+
+logger = get_logger("orchestrator")
 
 
 @dataclass
@@ -83,7 +86,7 @@ class Orchestrator:
             user_id=self.state.user_id
         )
 
-        print(f"Session started: {self.state.session_id}")
+        logger.info("Session started: %s (user: %s)", self.state.session_id, self.state.user_id)
 
     def _get_talk_agent(self):
         """Get the Cyrano agent instance."""
@@ -111,6 +114,7 @@ class Orchestrator:
             Cyrano's response
         """
         self.state.turn_count += 1
+        logger.debug("Turn %d: user message (%d chars)", self.state.turn_count, len(user_message))
 
         # Record user message in history (without mood instruction)
         self.state.conversation_history.append({
@@ -122,6 +126,7 @@ class Orchestrator:
         message_to_send = user_message
         if self.state.mood_instruction:
             message_to_send = f"[System guidance: {self.state.mood_instruction}]\n\n{user_message}"
+            logger.info("Mood injection: %s", self.state.mood_instruction[:80])
 
         # Get Cyrano agent
         agent = self._get_talk_agent()
@@ -129,6 +134,7 @@ class Orchestrator:
         # Run Cyrano
         response = agent.run(message_to_send)
         response_text = response.content
+        logger.debug("Turn %d: Cyrano response (%d chars)", self.state.turn_count, len(response_text))
 
         # Record assistant response in history
         self.state.conversation_history.append({
@@ -202,20 +208,20 @@ class Orchestrator:
                 conversation_history=list(self.state.conversation_history)
             )
             if fact_ids:
-                print(f"  [Background] Extracted {len(fact_ids)} facts")
+                logger.info("Extract Agent: %d facts extracted", len(fact_ids))
 
             # 2. Run Data Agent
             routing_results = run_data_routing(self.state.session_id)
             if routing_results["facts_routed"] > 0 or routing_results["questions_generated"] > 0:
-                print(f"  [Background] Routed {routing_results['facts_routed']} facts, "
-                      f"generated {routing_results['questions_generated']} questions")
+                logger.info("Data Agent: routed %d facts, generated %d questions",
+                            routing_results['facts_routed'], routing_results['questions_generated'])
 
             # 3. Run Mood Agent (every few turns to save API calls)
             if self.state.turn_count % 2 == 0:  # Every 2 turns
                 self._run_mood_assessment()
 
         except Exception as e:
-            print(f"  [Background] Error in pipeline: {e}")
+            logger.error("Background pipeline error: %s", e, exc_info=True)
 
     def _run_mood_assessment(self):
         """Run mood assessment and update instruction for next turn."""
@@ -240,12 +246,12 @@ class Orchestrator:
             # Update mood instruction for next turn
             if assessment.action.value != "CONTINUE":
                 self.state.mood_instruction = assessment.instruction_for_talk_agent
-                print(f"  [Background] Mood: {assessment.action.value} - {assessment.reasoning[:50]}...")
+                logger.info("Mood Agent: %s - %s", assessment.action.value, assessment.reasoning[:80])
             else:
                 self.state.mood_instruction = None
 
         except Exception as e:
-            print(f"  [Background] Mood assessment error: {e}")
+            logger.error("Mood assessment error: %s", e, exc_info=True)
 
     def get_conversation_summary(self) -> dict:
         """Get a summary of the current conversation state."""
@@ -263,7 +269,7 @@ class Orchestrator:
             try:
                 future.result(timeout=timeout)
             except Exception as e:
-                print(f"Background task error: {e}")
+                logger.error("Background task error: %s", e, exc_info=True)
         self.state.background_tasks.clear()
 
     def shutdown(self):

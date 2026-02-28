@@ -56,6 +56,7 @@ python -m agents.mood_agent <session_id> <user_id>
 | `agno-server/tools/questions_tools.py` | LanceDB vector search for gap questions |
 | `agno-server/tools/form_db_tools.py` | CRUD for all Form Database tables |
 | `agno-server/config/settings.py` | DB paths, API keys, embedding model |
+| `agno-server/config/logging_config.py` | Centralized logging configuration |
 | `_ref/talk-agent-personality.md` | Cyrano's complete behavioral specification |
 | `_ref/design-decisions.md` | DD-01 through DD-09 architectural decisions |
 
@@ -66,6 +67,21 @@ All local, no Docker required:
 - `data/cyrano.db` - SQLite: Main DB (extracted_facts) + Form DBs (fields, crops, inputs, yields, weather_observations, events, plans)
 - `data/agno_sessions.db` - Agno session persistence
 - `data/questions_vectordb/` - LanceDB: 768-dim vectors for gap questions (cleared each session)
+
+## Logging
+
+All modules use Python's `logging` module via the centralized config:
+
+```python
+from config.logging_config import get_logger
+logger = get_logger(__name__)
+```
+
+Logs go to both the console and `data/cyrano.log`. The log file persists across sessions and captures DEBUG-level detail. Console output defaults to INFO level.
+
+Log format: `timestamp | level | module | message`
+
+To view logs in real time: `tail -f data/cyrano.log`
 
 ## Critical Design Decisions
 

@@ -11,6 +11,9 @@ from sqlalchemy.orm import Session
 
 from db.connection import SessionLocal
 from db.models import Field, Crop, Input, Yield, WeatherObservation, Event, Plan
+from config.logging_config import get_logger
+
+logger = get_logger("tools.form_db")
 
 
 # =============================================================================
@@ -91,6 +94,7 @@ def create_field(
         db.add(field)
         db.commit()
         db.refresh(field)
+        logger.debug("Created fields record: %s", field.id)
         return str(field.id)
 
 
@@ -119,6 +123,7 @@ def update_field(field_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated fields record: %s", field_id)
             return f"Field {field_id} updated"
         return f"Field {field_id} not found"
 
@@ -195,6 +200,7 @@ def create_crop(
         db.add(crop)
         db.commit()
         db.refresh(crop)
+        logger.debug("Created crops record: %s", crop.id)
         return str(crop.id)
 
 
@@ -215,6 +221,7 @@ def update_crop(crop_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated crops record: %s", crop_id)
             return f"Crop {crop_id} updated"
         return f"Crop {crop_id} not found"
 
@@ -291,6 +298,7 @@ def create_input(
         db.add(input_record)
         db.commit()
         db.refresh(input_record)
+        logger.debug("Created inputs record: %s", input_record.id)
         return str(input_record.id)
 
 
@@ -314,6 +322,7 @@ def update_input(input_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated inputs record: %s", input_id)
             return f"Input {input_id} updated"
         return f"Input {input_id} not found"
 
@@ -382,6 +391,7 @@ def create_yield(
         db.add(yield_record)
         db.commit()
         db.refresh(yield_record)
+        logger.debug("Created yields record: %s", yield_record.id)
         return str(yield_record.id)
 
 
@@ -404,6 +414,7 @@ def update_yield(yield_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated yields record: %s", yield_id)
             return f"Yield {yield_id} updated"
         return f"Yield {yield_id} not found"
 
@@ -463,6 +474,7 @@ def create_weather_observation(
         db.add(obs)
         db.commit()
         db.refresh(obs)
+        logger.debug("Created weather_observations record: %s", obs.id)
         return str(obs.id)
 
 
@@ -482,6 +494,7 @@ def update_weather_observation(observation_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated weather_observations record: %s", observation_id)
             return f"Weather observation {observation_id} updated"
         return f"Weather observation {observation_id} not found"
 
@@ -550,6 +563,7 @@ def create_event(
         db.add(event)
         db.commit()
         db.refresh(event)
+        logger.debug("Created events record: %s", event.id)
         return str(event.id)
 
 
@@ -570,6 +584,7 @@ def update_event(event_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated events record: %s", event_id)
             return f"Event {event_id} updated"
         return f"Event {event_id} not found"
 
@@ -638,6 +653,7 @@ def create_plan(
         db.add(plan)
         db.commit()
         db.refresh(plan)
+        logger.debug("Created plans record: %s", plan.id)
         return str(plan.id)
 
 
@@ -657,6 +673,7 @@ def update_plan(plan_id: str, **kwargs) -> str:
         db.commit()
 
         if result.rowcount > 0:
+            logger.debug("Updated plans record: %s", plan_id)
             return f"Plan {plan_id} updated"
         return f"Plan {plan_id} not found"
 

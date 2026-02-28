@@ -6,6 +6,10 @@ sessions, traces, and outputs.
 
 Run with: python -m server
 """
+from config.logging_config import setup_logging
+
+setup_logging()
+
 from agno.os import AgentOS
 from agno.agent import Agent
 from agno.models.anthropic import Claude

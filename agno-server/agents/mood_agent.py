@@ -18,6 +18,9 @@ from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
 
 from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.logging_config import get_logger
+
+logger = get_logger("mood_agent")
 
 
 class MoodAction(str, Enum):
@@ -164,6 +167,7 @@ def assess_mood(
     Returns:
         MoodAssessment with action and instructions
     """
+    logger.debug("Assessing mood for session %s, user %s", session_id, user_id)
     agent = create_mood_agent(user_id=user_id, talk_session_id=session_id)
 
     assessment_prompt = f"""Analyze the following recent conversation and assess the farmer's emotional state and engagement level.
@@ -182,7 +186,9 @@ Provide your assessment."""
     response = agent.run(assessment_prompt)
 
     # response.content should be a MoodAssessment due to output_schema
-    return response.content
+    assessment = response.content
+    logger.info("Mood assessment: action=%s, engagement=%s", assessment.action.value, assessment.engagement_level)
+    return assessment
 
 
 def format_conversation_for_mood(messages: list[dict]) -> str:

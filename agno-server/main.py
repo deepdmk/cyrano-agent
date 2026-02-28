@@ -5,6 +5,10 @@ Run with: python -m main
 """
 import sys
 
+from config.logging_config import setup_logging
+
+setup_logging()
+
 from agents.orchestrator import run_conversation_cli
 
 

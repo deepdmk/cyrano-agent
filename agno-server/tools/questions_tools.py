@@ -13,6 +13,9 @@ import pyarrow as pa
 from sentence_transformers import SentenceTransformer
 
 from config.settings import EMBEDDING_MODEL, EMBEDDING_DIMENSION, LANCEDB_DIR
+from config.logging_config import get_logger
+
+logger = get_logger("tools.questions")
 
 
 # Initialize the embedding model (singleton)
@@ -131,6 +134,7 @@ def write_question(
     }
 
     table.add([record])
+    logger.debug("Question written: table=%s, field=%s, priority=%s", source_table, source_field, priority)
     return question_id
 
 
@@ -181,7 +185,7 @@ def search_questions(
         # If search fails (e.g., no matching session), return empty
         return []
 
-    return [
+    result_list = [
         {
             "id": row["id"],
             "question_text": row["question_text"],
@@ -194,6 +198,8 @@ def search_questions(
         }
         for row in results
     ]
+    logger.debug("Searching questions: session=%s, limit=%d, results=%d", session_id, limit, len(result_list))
+    return result_list
 
 
 def clear_session_questions(session_id: str) -> str:
@@ -223,6 +229,7 @@ def clear_session_questions(session_id: str) -> str:
         # Drop and recreate the table (simplest way to clear in LanceDB)
         db.drop_table(QUESTIONS_TABLE)
 
+    logger.info("Cleared questions for session %s", session_id)
     return f"Cleared {count} questions for session {session_id}"
 
 
