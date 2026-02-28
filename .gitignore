@@ -62,3 +62,13 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# Large ML model files (bundled locally, not in git)
+ios-client/CyranoChat/Models/
+*.gguf
+*.mlmodelc/
+*.safetensors
+
+# Xcode user data
+xcuserdata/
+*.xcworkspace/
