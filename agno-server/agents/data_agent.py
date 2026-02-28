@@ -14,7 +14,9 @@ from agno.agent import Agent
 from agno.models.anthropic import Claude
 from agno.tools.decorator import tool
 
-from config.settings import DEFAULT_MODEL_ID
+from agno.db.sqlite import SqliteDb
+
+from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
 from config.logging_config import get_logger
 from tools.main_db_tools import get_unrouted_facts, mark_fact_routed
 
@@ -157,6 +159,10 @@ def create_data_agent(session_id: str) -> Agent:
     agent = Agent(
         name="Data Agent",
         model=Claude(id=DEFAULT_MODEL_ID),
+        db=SqliteDb(
+            db_file=AGNO_DB_FILE
+        ),
+        session_id=f"data_{session_id}",
         instructions=[DATA_AGENT_INSTRUCTIONS],
         tools=[
             # Main DB tools

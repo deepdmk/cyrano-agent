@@ -13,6 +13,10 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from api.session_manager import SessionManager
+from config.logging_config import setup_logging
+
+# Initialize logging before anything else
+setup_logging()
 
 app = FastAPI(title="Cyrano Agno Server", version="0.1.0")
 

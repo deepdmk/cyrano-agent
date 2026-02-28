@@ -117,11 +117,11 @@ def create_extract_agent(session_id: str) -> Agent:
         db=SqliteDb(
             db_file=AGNO_DB_FILE
         ),
-        session_id=session_id,  # Same session as Talk Agent to read conversation
+        session_id=f"extract_{session_id}",  # Own session (conversation passed via prompt)
         instructions=[EXTRACT_AGENT_INSTRUCTIONS],
         tools=[extract_fact],
         add_history_to_context=True,
-        num_history_runs=20,  # Look back further to see full conversation
+        num_history_runs=20,
         markdown=False,
     )
 
