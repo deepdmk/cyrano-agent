@@ -80,3 +80,4 @@ agent-ui/
 # Project internal docs and Claude config
 _ref/
 .claude/
+.mcp.json
