@@ -1,3 +1,4 @@
+# Requires Python 3.12 (PyTorch not available for 3.14)
 agno
 anthropic
 sqlalchemy
