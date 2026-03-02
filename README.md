@@ -20,16 +20,16 @@ graph TB
     Farmer(["FARMER"])
 
     subgraph Orchestrator["ORCHESTRATOR"]
-        Cyrano["CYRANO\nConversation Agent"]
+        Cyrano["CYRANO"]
 
         subgraph Pipeline["BACKGROUND PIPELINE"]
-            ExtractAgent["EXTRACT\nAGENT"]
-            DataAgent["DATA\nAGENT"]
-            MoodAgent["MOOD\nAGENT"]
+            ExtractAgent["EXTRACT AGENT"]
+            DataAgent["DATA AGENT"]
+            MoodAgent["MOOD AGENT"]
         end
     end
 
-    QuestionsDB[("Questions\nVector DB")]
+    QuestionsDB[("Questions Vector DB")]
     MainDB[("Main DB")]
     FormDBs[("Form DBs")]
 
