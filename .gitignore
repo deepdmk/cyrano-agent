@@ -76,3 +76,7 @@ xcuserdata/
 # Generated/build artifacts
 ios-client/CyranoChat/Generated/
 agent-ui/
+
+# Project internal docs and Claude config
+_ref/
+.claude/
