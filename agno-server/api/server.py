@@ -75,3 +75,9 @@ def get_session(session_id: str):
     if not orch:
         return {"error": "Session not found"}
     return orch.get_conversation_summary()
+
+
+@app.on_event("shutdown")
+def shutdown_event():
+    """Gracefully shutdown all active sessions."""
+    session_mgr.shutdown_all()

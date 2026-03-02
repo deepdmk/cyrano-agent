@@ -18,9 +18,9 @@ from typing import Iterator, Optional
 from concurrent.futures import ThreadPoolExecutor
 
 from agents.talk_agent import create_talk_agent
-from agents.extract_agent import run_extraction
-from agents.data_agent import run_data_routing
-from agents.mood_agent import assess_mood, MoodAssessment
+from agents.extract_agent import run_extraction, create_extract_agent
+from agents.data_agent import run_data_routing, create_data_agent
+from agents.mood_agent import assess_mood, create_mood_agent, MoodAssessment
 from tools.questions_tools import clear_session_questions
 from config.logging_config import get_logger
 
@@ -69,7 +69,11 @@ class Orchestrator:
             user_id=user_id
         )
         self._executor = ThreadPoolExecutor(max_workers=3)
+        # Cached agent instances (created once, reused throughout session)
         self._talk_agent = None
+        self._extract_agent = None
+        self._data_agent = None
+        self._mood_agent = None
 
     @property
     def session_id(self) -> str:
@@ -105,6 +109,27 @@ class Orchestrator:
                 user_id=self.state.user_id
             )
         return self._talk_agent
+
+    def _get_extract_agent(self):
+        """Get the Extract agent instance (cached for performance)."""
+        if self._extract_agent is None:
+            self._extract_agent = create_extract_agent(self.state.session_id)
+        return self._extract_agent
+
+    def _get_data_agent(self):
+        """Get the Data agent instance (cached for performance)."""
+        if self._data_agent is None:
+            self._data_agent = create_data_agent(self.state.session_id)
+        return self._data_agent
+
+    def _get_mood_agent(self):
+        """Get the Mood agent instance (cached for performance)."""
+        if self._mood_agent is None:
+            self._mood_agent = create_mood_agent(
+                user_id=self.state.user_id,
+                talk_session_id=self.state.session_id
+            )
+        return self._mood_agent
 
     def process_message(self, user_message: str) -> str:
         """
@@ -225,7 +250,8 @@ class Orchestrator:
             logger.debug("Background: calling Extract Agent...")
             fact_ids = run_extraction(
                 self.state.session_id,
-                conversation_history=list(self.state.conversation_history)
+                conversation_history=list(self.state.conversation_history),
+                agent=self._get_extract_agent()
             )
             if fact_ids:
                 logger.info("Extract Agent: %d facts extracted", len(fact_ids))
@@ -234,7 +260,10 @@ class Orchestrator:
 
             # 2. Run Data Agent
             logger.debug("Background: calling Data Agent...")
-            routing_results = run_data_routing(self.state.session_id)
+            routing_results = run_data_routing(
+                self.state.session_id,
+                agent=self._get_data_agent()
+            )
             if routing_results["facts_routed"] > 0 or routing_results["questions_generated"] > 0:
                 logger.info("Data Agent: routed %d facts, generated %d questions",
                             routing_results['facts_routed'], routing_results['questions_generated'])
@@ -274,7 +303,8 @@ class Orchestrator:
             assessment = assess_mood(
                 session_id=self.state.session_id,
                 user_id=self.state.user_id,
-                recent_conversation=conversation_text
+                recent_conversation=conversation_text,
+                agent=self._get_mood_agent()
             )
 
             # Update mood instruction for next turn

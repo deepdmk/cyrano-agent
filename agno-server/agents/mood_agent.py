@@ -145,6 +145,7 @@ def create_mood_agent(user_id: str, talk_session_id: str) -> Agent:
         output_schema=MoodAssessment,
         add_history_to_context=True,
         num_history_runs=5,  # Remember recent assessments
+        update_memory_on_run=True,  # Enable cross-session learning about farmer patterns
         markdown=False,
     )
 
@@ -154,7 +155,8 @@ def create_mood_agent(user_id: str, talk_session_id: str) -> Agent:
 def assess_mood(
     session_id: str,
     user_id: str,
-    recent_conversation: str
+    recent_conversation: str,
+    agent: Optional[Agent] = None
 ) -> MoodAssessment:
     """
     Assess the farmer's mood based on recent conversation.
@@ -163,12 +165,15 @@ def assess_mood(
         session_id: The Talk Agent's session ID
         user_id: The farmer's user ID
         recent_conversation: The recent conversation turns to analyze
+        agent: Optional pre-created agent instance to reuse (for performance)
 
     Returns:
         MoodAssessment with action and instructions
     """
     logger.debug("Assessing mood for session %s, user %s", session_id, user_id)
-    agent = create_mood_agent(user_id=user_id, talk_session_id=session_id)
+    # Use provided agent or create a new one
+    if agent is None:
+        agent = create_mood_agent(user_id=user_id, talk_session_id=session_id)
 
     assessment_prompt = f"""Analyze the following recent conversation and assess the farmer's emotional state and engagement level.
 

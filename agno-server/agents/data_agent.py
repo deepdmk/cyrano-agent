@@ -188,18 +188,22 @@ def create_data_agent(session_id: str) -> Agent:
             add_question,
             create_embedding,
         ],
+        add_history_to_context=True,
+        num_history_runs=10,
+        tool_call_limit=50,  # Prevent runaway tool calls with 30+ tools
         markdown=False,
     )
 
     return agent
 
 
-def run_data_routing(session_id: str) -> dict:
+def run_data_routing(session_id: str, agent: Optional[Agent] = None) -> dict:
     """
     Run the Data Agent to route facts and generate questions.
 
     Args:
         session_id: The session ID for question generation
+        agent: Optional pre-created agent instance to reuse (for performance)
 
     Returns:
         Summary dict with facts_routed and questions_generated counts
@@ -213,8 +217,9 @@ def run_data_routing(session_id: str) -> dict:
     # Get initial counts
     initial_unrouted = len(get_unrouted_facts())
 
-    # Create and run the data agent
-    agent = create_data_agent(session_id)
+    # Use provided agent or create a new one
+    if agent is None:
+        agent = create_data_agent(session_id)
 
     routing_prompt = """Execute both parts of your job:
 

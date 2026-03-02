@@ -128,7 +128,11 @@ def create_extract_agent(session_id: str) -> Agent:
     return agent
 
 
-def run_extraction(session_id: str, conversation_history: list[dict] | None = None) -> list[str]:
+def run_extraction(
+    session_id: str,
+    conversation_history: list[dict] | None = None,
+    agent: Optional[Agent] = None
+) -> list[str]:
     """
     Run extraction on a conversation session.
 
@@ -137,6 +141,7 @@ def run_extraction(session_id: str, conversation_history: list[dict] | None = No
         conversation_history: List of {"role": "user"|"assistant", "content": str} dicts
             from the orchestrator. If provided, the conversation is included directly
             in the prompt (required since Agno scopes history per agent).
+        agent: Optional pre-created agent instance to reuse (for performance)
 
     Returns:
         List of fact IDs that were created
@@ -148,8 +153,9 @@ def run_extraction(session_id: str, conversation_history: list[dict] | None = No
     existing_facts = get_facts_by_session(session_id)
     existing_ids = {f["id"] for f in existing_facts}
 
-    # Create and run the extract agent
-    agent = create_extract_agent(session_id)
+    # Use provided agent or create a new one
+    if agent is None:
+        agent = create_extract_agent(session_id)
 
     # Build the conversation transcript for the prompt
     conversation_block = ""
