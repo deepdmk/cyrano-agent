@@ -5,7 +5,7 @@
 ![Agno](https://img.shields.io/badge/Framework-Agno-purple)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A multi-agent conversational AI system that captures structured data through natural dialogue. Users never see forms or databases—data collection happens invisibly through conversation.
+A multi-agent conversational AI system that captures structured data through natural dialogue. Users never see forms or databases with data collection happens invisibly through natural flowing conversation with a devote agent with information extraction, entry, and feeding of needed info, follow-up and guidance to the front end talk agent occuring through an Agno agentic system in the background. 
 
 ## The Problem with Forms
 
