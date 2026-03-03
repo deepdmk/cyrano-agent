@@ -40,15 +40,20 @@ graph TB
         end
     end
 
-    QuestionsDB[("Questions Vector DB")]
+    Sessions[("Sessions")]
     MainDB[("Main DB")]
     FormDBs[("Form DBs")]
+    QuestionsDB[("Questions Vector DB")]
 
     User <--> Cyrano
-    Cyrano --> QuestionsDB
+    Cyrano --> Sessions
+    Sessions --> ExtractAgent
+    Sessions --> MoodAgent
     ExtractAgent --> MainDB
+    MainDB --> DataAgent
     DataAgent --> FormDBs
     DataAgent --> QuestionsDB
+    QuestionsDB --> Cyrano
     MoodAgent -.-> Cyrano
 ```
 
