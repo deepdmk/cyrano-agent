@@ -5,19 +5,30 @@
 ![Agno](https://img.shields.io/badge/Framework-Agno-purple)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A multi-agent conversational AI system that captures agricultural data through natural dialogue with smallholder farmers. The farmer never sees forms or databases—data capture happens invisibly through conversation.
+A multi-agent conversational AI system that captures structured data through natural dialogue. Users never see forms or databases—data collection happens invisibly through conversation.
 
-## Problem Statement
+## The Problem with Forms
 
-Most digital agriculture tools ask farmers to adapt to technology: fill out forms, answer structured questions, log data into systems designed for desk workers. That is the wrong direction. People give better information in natural conversation than they do on forms—more detail, more context, more of the connections between things.
+Digital tools ask people to adapt to technology: fill out forms, answer structured questions, log data into systems designed for desk workers. But people give better information in natural conversation than they do on forms—more detail, more context, more of the connections between things.
 
-Cyrano solves this with four specialized Claude agents. The front-of-house agent focuses entirely on being a good conversation partner, while background agents extract structured facts, route them to databases, and identify gaps to fill naturally in future conversations. The farmer answers without knowing they just filled in a database field.
+This mismatch hits hardest for populations that current digital tools exclude by design:
 
-## Architecture
+- A patient describing symptoms to a health worker
+- A caregiver reporting on a loved one's condition
+- A smallholder farmer tracking crops and inputs
+- A social worker conducting a home visit
+- A refugee explaining their situation
+- A non-literate artisan negotiating with a buyer
+
+For these users, the answer is not a simpler interface—it is no interface at all. Just conversation.
+
+## How It Works
+
+Cyrano solves this with four specialized Claude agents. The front-of-house agent focuses entirely on being a good conversation partner, while background agents extract structured facts, route them to databases, and identify gaps to fill naturally in future conversations. The user shares information without knowing they just populated a database field.
 
 ```mermaid
 graph TB
-    Farmer(["FARMER"])
+    User(["USER"])
 
     subgraph Orchestrator["ORCHESTRATOR"]
         Cyrano["CYRANO"]
@@ -33,7 +44,7 @@ graph TB
     MainDB[("Main DB")]
     FormDBs[("Form DBs")]
 
-    Farmer <--> Cyrano
+    User <--> Cyrano
     Cyrano --> QuestionsDB
     ExtractAgent --> MainDB
     DataAgent --> FormDBs
@@ -47,17 +58,33 @@ graph TB
 |-------|------|
 | **Cyrano** | Front-of-house conversational partner. Listens, follows up naturally, never advises or interrogates. |
 | **Extract Agent** | Pulls structured facts from conversation into Main DB. |
-| **Data Agent** | Routes facts to Form DBs, generates natural-language questions for gaps. |
+| **Data Agent** | Routes facts to domain-specific databases, generates natural-language questions for gaps. |
 | **Mood Agent** | Monitors engagement, nudges Cyrano to adjust pace or wrap up warmly. |
 
 ## Features
 
-- Natural conversation that feels like talking to a neighbor
+- Natural conversation that feels like talking to a person, not a system
 - Invisible data capture—no forms, no structured questions
 - Vector-based question surfacing when conversation drifts near data gaps
-- Mood-aware engagement that respects the farmer's energy
-- Swappable form databases as integration points for external products
+- Mood-aware engagement that respects the user's energy and attention
+- Swappable domain databases as integration points for external products
 - Local-first: SQLite + LanceDB, no Docker required
+
+## Use Cases
+
+The pattern applies anywhere people communicate naturally but systems need structured records:
+
+| Domain | Example |
+|--------|---------|
+| **Healthcare** | Patient intake, symptom tracking, medication adherence |
+| **Caregiving** | Daily status updates, incident reporting, care coordination |
+| **Agriculture** | Crop planning, input tracking, yield recording |
+| **Social Services** | Needs assessments, case management, benefit eligibility |
+| **Field Research** | Surveys, interviews, longitudinal data collection |
+
+## Current Implementation
+
+This repository ships with an **agriculture reference implementation**—a conversational system for smallholder farmers to track fields, crops, inputs, and yields. The domain-specific components (database schemas, question banks, personality tuning) can be swapped out for other use cases.
 
 ## Quick Start
 
@@ -112,18 +139,7 @@ cyrano-agent/
 └── _ref/                 # Design docs and specifications
 ```
 
-## Beyond Agriculture
-
-This pattern applies anywhere people communicate naturally but would benefit from structured digital records:
-
-- A patient describing symptoms
-- A social worker conducting a home visit
-- A refugee explaining their situation
-- A non-literate artisan negotiating with a buyer
-
-For populations that current digital tools exclude by design, the answer is not a simpler interface—it is no interface at all. Just conversation.
-
-## Skills Demonstrated
+## Technical Highlights
 
 - Multi-agent orchestration with Claude
 - Agno framework for agent persistence and tooling
