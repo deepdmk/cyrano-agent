@@ -61,10 +61,10 @@ graph TB
 
 | Agent | Role |
 |-------|------|
-| **Cyrano** | Front-of-house conversational partner. Listens, follows up naturally, never advises or interrogates. |
-| **Extract Agent** | Pulls structured facts from conversation into Main DB. |
-| **Data Agent** | Routes facts to domain-specific databases, generates natural-language questions for gaps. |
-| **Mood Agent** | Monitors engagement, nudges Cyrano to adjust pace or wrap up warmly. |
+| **Cyrano** | Front-of-house conversational partner. Listens, follows up naturally, never advises or interrogates. (Claude Sonnet 4.5) |
+| **Extract Agent** | Pulls structured facts from conversation into Main DB. (Claude Haiku 4.5) |
+| **Data Agent** | Routes facts to domain-specific databases, generates questions for gaps. (Claude Sonnet 4.5) |
+| **Mood Agent** | Monitors engagement, nudges Cyrano to adjust pace or wrap up warmly. (Claude Sonnet 4.5) |
 
 ## Features
 
