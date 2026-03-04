@@ -31,7 +31,7 @@ from agno.agent import Agent
 from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.settings import TALK_AGENT_MODEL_ID, EXTRACT_AGENT_MODEL_ID, DATA_AGENT_MODEL_ID, MOOD_AGENT_MODEL_ID, AGNO_DB_FILE
 from agents.talk_agent import CYRANO_INSTRUCTIONS
 from agents.extract_agent import EXTRACT_AGENT_INSTRUCTIONS
 from agents.data_agent import DATA_AGENT_INSTRUCTIONS
@@ -100,7 +100,7 @@ def find_relevant_questions(conversation_summary: str) -> str:
 
 cyrano_agent = Agent(
     name="Cyrano",
-    model=Claude(id=DEFAULT_MODEL_ID),
+    model=Claude(id=TALK_AGENT_MODEL_ID),
     db=db,
     instructions=[CYRANO_INSTRUCTIONS],
     tools=[find_relevant_questions],
@@ -144,7 +144,7 @@ def extract_fact(
 
 extract_agent = Agent(
     name="Extract Agent",
-    model=Claude(id=DEFAULT_MODEL_ID),
+    model=Claude(id=EXTRACT_AGENT_MODEL_ID),
     db=db,
     instructions=[EXTRACT_AGENT_INSTRUCTIONS],
     tools=[extract_fact],
@@ -201,7 +201,7 @@ def create_embedding(text: str) -> list[float]:
 
 data_agent = Agent(
     name="Data Agent",
-    model=Claude(id=DEFAULT_MODEL_ID),
+    model=Claude(id=DATA_AGENT_MODEL_ID),
     db=db,
     instructions=[DATA_AGENT_INSTRUCTIONS],
     tools=[
@@ -224,7 +224,7 @@ data_agent = Agent(
 
 mood_agent = Agent(
     name="Mood Agent",
-    model=Claude(id=DEFAULT_MODEL_ID),
+    model=Claude(id=MOOD_AGENT_MODEL_ID),
     db=db,
     instructions=[MOOD_AGENT_INSTRUCTIONS],
     output_schema=MoodAssessment,

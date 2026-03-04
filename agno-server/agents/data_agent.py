@@ -16,7 +16,7 @@ from agno.tools.decorator import tool
 
 from agno.db.sqlite import SqliteDb
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.settings import DATA_AGENT_MODEL_ID, AGNO_DB_FILE
 from config.logging_config import get_logger
 from tools.main_db_tools import get_unrouted_facts, mark_fact_routed
 
@@ -158,7 +158,7 @@ def create_data_agent(session_id: str) -> Agent:
 
     agent = Agent(
         name="Data Agent",
-        model=Claude(id=DEFAULT_MODEL_ID),
+        model=Claude(id=DATA_AGENT_MODEL_ID),
         db=SqliteDb(
             db_file=AGNO_DB_FILE
         ),

@@ -14,7 +14,7 @@ from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
 from agno.tools.decorator import tool
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.settings import TALK_AGENT_MODEL_ID, AGNO_DB_FILE
 from config.logging_config import get_logger
 from tools.questions_tools import generate_embedding, search_questions
 from tools.main_db_tools import get_recent_fact_for_user
@@ -155,7 +155,7 @@ def create_talk_agent(
     # Create the agent
     agent = Agent(
         name="Cyrano",
-        model=Claude(id=DEFAULT_MODEL_ID),
+        model=Claude(id=TALK_AGENT_MODEL_ID),
         db=SqliteDb(
             db_file=AGNO_DB_FILE
         ),

@@ -24,8 +24,11 @@ LANCEDB_DIR = str(DATA_DIR / "questions_vectordb")
 # Anthropic API configuration
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
-# Model configuration
-DEFAULT_MODEL_ID = "claude-sonnet-4-5-20250929"
+# Model configuration (per-agent)
+TALK_AGENT_MODEL_ID = "claude-sonnet-4-5-20250929"
+EXTRACT_AGENT_MODEL_ID = "claude-haiku-4-5-20251001"
+DATA_AGENT_MODEL_ID = "claude-haiku-4-5-20251001"
+MOOD_AGENT_MODEL_ID = "claude-haiku-4-5-20251001"
 
 # Embedding configuration
 EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"

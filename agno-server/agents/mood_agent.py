@@ -17,7 +17,7 @@ from agno.agent import Agent
 from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.settings import MOOD_AGENT_MODEL_ID, AGNO_DB_FILE
 from config.logging_config import get_logger
 
 logger = get_logger("mood_agent")
@@ -135,7 +135,7 @@ def create_mood_agent(user_id: str, talk_session_id: str) -> Agent:
 
     agent = Agent(
         name="Mood Agent",
-        model=Claude(id=DEFAULT_MODEL_ID),
+        model=Claude(id=MOOD_AGENT_MODEL_ID),
         db=SqliteDb(
             db_file=AGNO_DB_FILE
         ),

@@ -12,7 +12,7 @@ from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
 from agno.tools.decorator import tool
 
-from config.settings import DEFAULT_MODEL_ID, AGNO_DB_FILE
+from config.settings import EXTRACT_AGENT_MODEL_ID, AGNO_DB_FILE
 from config.logging_config import get_logger
 from tools.main_db_tools import write_extracted_fact, get_facts_by_session
 
@@ -113,7 +113,7 @@ def create_extract_agent(session_id: str) -> Agent:
 
     agent = Agent(
         name="Extract Agent",
-        model=Claude(id=DEFAULT_MODEL_ID),
+        model=Claude(id=EXTRACT_AGENT_MODEL_ID),
         db=SqliteDb(
             db_file=AGNO_DB_FILE
         ),
