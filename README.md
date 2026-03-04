@@ -24,7 +24,7 @@ For these users, the answer is not a simpler interface—it is no interface at a
 
 ## How It Works
 
-Cyrano solves this with four specialized Claude agents. The front-of-house agent focuses entirely on being a good conversation partner, while background agents extract structured facts, route them to databases, and identify gaps to fill naturally in future conversations. The user shares information without knowing they just populated a database field.
+Cyrano solves this with four specialized Claude agents. The front-of-house agent focuses entirely on being a good conversation partner, while background agents extract structured facts, route them to databases, and identify gaps to fill naturally in future conversations. The user shares information without having to know how they just populated a database field.
 
 ```mermaid
 graph TB
